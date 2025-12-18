@@ -162,8 +162,8 @@ export default function Confirmation() {
 
 
     return (
-        <div className="md:pb-24">
-            <div className="mt-14 md:mt-0">
+        <div className="md:pb-14">
+            <div className="mt-10 md:mt-0">
                 <ServiceDetails title="Review & Confirm" currentStep={4} />
             </div>
 

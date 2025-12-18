@@ -159,7 +159,7 @@ const DateTime = () => {
     }
 
     return (
-        <div>
+        <div className="mt-10 md:mt-0">
             <ServiceDetails title="Date & Time" currentStep={3} />
 
             <div className="flex gap-8 mt-5">

@@ -115,10 +115,10 @@ export default function LocationPicker() {
     if (!isLoaded) return <div>Loading map…</div>;
     return (
         <div>
-            <div className="mt-14 md:mt-0">
+            <div className="mt-10 md:mt-0">
                 <ServiceDetails title="Address" currentStep={2} />
             </div>
-            <div className="flex gap-8 mt-5">
+            <div className="flex justify-center gap-8 mt-5">
                 <div className="md:w-[60%] mb-4 space-y-4 relative shadow-md w-full p-1" confir>
                     <h2 className="text-[27px] font-semibold ml-12">Where do you need the service?</h2>
 

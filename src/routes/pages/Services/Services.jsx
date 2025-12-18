@@ -75,10 +75,10 @@ const Services = () => {
 
     return (
         <div>
-            <div className="mt-14 md:mt-0">
+            <div className="mt-10 md:mt-0">
                 <ServiceDetails title="Service Details" currentStep={1} />
             </div>
-            <div className="md:flex gap-8 mt-5">
+            <div className="md:flex justify-center gap-8 mt-5">
                 {/* Left */}
                 <div className="md:w-[60%] md:mb-4 md:space-y-4">
 
@@ -256,6 +256,7 @@ const Services = () => {
 
                 <Summery serviceTitle={serviceTitle} itemSummary={itemSummary} total={serviceCharge + (serviceCharge * 0.05)} showInput={showInput} setShowInput={setShowInput} vat={vat} subTotal={serviceCharge} serviceCharge={serviceCharge} />
             </div>
+            
             <div className="hidden md:block">
                 <NextBtn disabled={itemSummary.length === 0} />
             </div>

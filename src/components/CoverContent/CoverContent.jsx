@@ -10,115 +10,86 @@ const CoverContent = ({ content }) => {
     const properties = Array.isArray(content?.propertyType)
         ? content.propertyType
         : [];
-    // console.log(content);
+
     const handleOpenModal = (property) => {
         setSelectedProperty(property);
         setShowModal(true);
     };
 
     return (
-        <div className="mt-3 md:mt-6 ">
+        <div className="mt-3 md:mt-6">
             {properties.map((property, idx) => (
-                // old version 
-                // <div
-                //     key={idx}
-                //     onClick={() => handleOpenModal(property)}
-                //     className="md:flex mb-6"
-                // >
-                //     {/* Left Side: Image */}
-                //     <img
-                //         src={property.image}
-                //         alt={property.title}
-                //         className="w-[50%] mb-2.5 md:w-20 md:h-20 object-cover rounded-sm mx-auto"
-                //     />
-
-                //     {/* Right Side: Content */}
-                //     <div className="md:ml-5 text-center md:text-start space-y-1 flex-1">
-                //         <h2 className="text-[18px] font-semibold mb-2">
-                //             {property.title}
-                //         </h2>
-                //         <p className="text-gray-600 text-[13px]">
-                //             {property.description}
-                //         </p>
-
-                //         <div className="md:flex justify-between items-center">
-                //             <p className="text-gray-600 flex text-center md:text-start items-center gap-2 text-[14px]">
-                //                 Starting from{" "}
-                //                 <span className="font-bold flex items-center">
-                //                     <img
-                //                         className="h-[15px] w-[15px]"
-                //                         src={dirhum}
-                //                         alt="AED"
-                //                     />{" "}
-                //                     {property.startFrom}
-                //                 </span>
-                //             </p>
-
-                //             {/* 🔹 Small indicator button (non-clickable now) */}
-                //             <div className="border  px-2.5 py-1 flex items-center gap-2 text-[#01788E] rounded-xs text-[13px]">
-                //                 {property.propertyItems?.length || 0} Options{" "}
-                //                 <MdOutlineArrowRightAlt />
-                //             </div>
-                //         </div>
-                //     </div>
-                // </div>
-
-                // new responcive version 
                 <div
                     key={idx}
                     onClick={() => handleOpenModal(property)}
-                    className="group cursor-pointer transition-all duration-200 mb-6 p-4 md:p-0 rounded-lg border border-gray-100 hover:border-gray-200 md:border-0"
+                    className="group cursor-pointer transition-all duration-200 mb-4 md:mb-5 p-3 md:p-4 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm bg-white"
                 >
-                    <div className="md:flex md:items-start md:gap-4 lg:gap-6 border-b pb-3 border-gray-400">
-                        {/* Image */}
-                        <div className="relative mb-4 md:mb-0 md:flex-shrink-0 flex justify-center md:justify-start">
-                            <img
-                                src={property.image}
-                                alt={property.title}
-                                className="w-full max-w-xs h-48 md:w-32 md:h-32 lg:w-40 lg:h-40 object-cover rounded-lg"
-                            />
+                    <div className="md:flex md:items-start md:gap-4 lg:gap-5">
+                        {/* Image - Professional Compact */}
+                        <div className="relative mb-3 md:mb-0 md:flex-shrink-0">
+                            <div className="relative overflow-hidden rounded-lg bg-gray-100">
+                                <img
+                                    src={property.image}
+                                    alt={property.title}
+                                    className="w-full h-36 md:w-28 md:h-28 lg:w-32 lg:h-32 object-cover transition-transform duration-300 group-hover:scale-105"
+                                />
+                                {/* Professional Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            </div>
                         </div>
 
-                        {/* Content */}
-                        <div className="text-center md:text-left flex-1">
-                            {/* Title & Description */}
-                            <div className="mb-3 md:mb-4">
-                                <h2 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mb-2">
+                        {/* Content - Professional Compact */}
+                        <div className="flex-1">
+                            {/* Title & Description - Professional Typography */}
+                            <div className="mb-3">
+                                <h2 className="text-base md:text-lg font-semibold text-gray-800 mb-1.5 line-clamp-1">
                                     {property.title}
                                 </h2>
-                                <p className="text-gray-600 text-sm md:text-base">
+                                <p className="text-gray-600 text-xs md:text-sm leading-relaxed line-clamp-2">
                                     {property.description}
                                 </p>
                             </div>
 
-                            {/* Mobile: Price & Button in one column, Desktop: Flex between */}
-                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                                {/* Price */}
-                                <div className="flex flex-col items-center md:items-start">
-                                    <p className="text-gray-500 text-sm md:text-base">
-                                        Starting from
-                                    </p>
+                            {/* Price & Button - Professional Layout */}
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+                                {/* Price - Compact Professional */}
+                                <div className="flex flex-col">
+                                    <p className="text-gray-500 text-xs mb-1">Starting from</p>
                                     <div className="flex items-center gap-1.5">
                                         <img
-                                            className="h-4 w-4 md:h-5 md:w-5"
+                                            className="h-3.5 w-3.5 md:h-4 md:w-4"
                                             src={dirhum}
                                             alt="AED"
                                         />
-                                        <span className="font-bold text-lg md:text-xl lg:text-2xl text-gray-900">
+                                        <span className="font-bold text-base md:text-lg text-gray-900">
                                             {property.startFrom.toLocaleString()}
                                         </span>
+                                        <span className="text-gray-500 text-xs ml-1">per service</span>
                                     </div>
                                 </div>
 
-                                {/* Button - Mobile: Full width, Desktop: Auto width */}
-                                <div className="w-full md:w-auto">
-                                    <div className="border border-[#01788E] px-4 py-2.5 flex items-center justify-center md:justify-between gap-2 text-[#01788E] rounded text-sm md:text-base hover:bg-[#01788E] hover:text-white cursor-pointer transition-colors duration-200">
-                                        <span className="font-medium">
-                                            {property.propertyItems?.length || 0} Options
-                                        </span>
-                                        <MdOutlineArrowRightAlt className="w-5 h-5" />
-                                    </div>
+                                {/* Button - Professional Compact */}
+                                <div className="w-full md:w-auto mt-1 md:mt-0">
+                                    <button className="w-full md:w-auto min-w-[120px] border border-[#01788E] px-3 py-2 md:px-4 md:py-2.5 flex items-center justify-center gap-2 text-[#01788E] rounded-lg text-xs md:text-sm font-medium hover:bg-[#01788E] hover:text-white cursor-pointer transition-all duration-200 active:scale-[0.98]">
+                                        <span>{property.propertyItems?.length || 0} Options</span>
+                                        <MdOutlineArrowRightAlt className="w-4 h-4 md:w-4.5 md:h-4.5" />
+                                    </button>
                                 </div>
+                            </div>
+
+                            {/* Optional: Professional Meta Info */}
+                            <div className="mt-3 pt-3 border-t border-gray-100 hidden md:flex items-center gap-4">
+                                {property.features && property.features.length > 0 && (
+                                    <>
+                                        <span className="text-xs text-gray-500 flex items-center gap-1">
+                                            <BsCheckCircle className="w-3 h-3 text-green-500" />
+                                            {property.features[0]}
+                                        </span>
+                                        {property.features.length > 1 && (
+                                            <span className="text-xs text-gray-500">+{property.features.length - 1} more</span>
+                                        )}
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

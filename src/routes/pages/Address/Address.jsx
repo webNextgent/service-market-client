@@ -58,15 +58,15 @@ const Address = () => {
 
     return (
         <div>
-            <div className="mt-14 md:mt-0">
+            <div className="mt-10 md:mt-0">
                 <ServiceDetails title="Address" currentStep={2} />
             </div>
 
-            <div className="flex gap-8 md:mt-5">
-                <div className="md:w-[60%] mb-4 space-y-4 w-full p-4">
-                    <div className="bg-white rounded-xl shadow-lg w-full p-8">
+            <div className="flex gap-8">
+                <div className="lg:w-[60%] mb-4 space-y-4 w-full">
+                    <div className="bg-white rounded-xl shadow-lg w-full p-5">
                         {/* TYPE BUTTONS */}
-                        <div className="flex space-x-2 mb-6">
+                        <div className="flex space-x-3 mb-6 overflow-x-auto">
                             {buttons.map(btn => (
                                 <button
                                     key={btn}

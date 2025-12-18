@@ -13,6 +13,8 @@ import { SiServerless } from "react-icons/si";
 import { LuProportions } from "react-icons/lu";
 import { IoMdTime } from "react-icons/io";
 
+// Sample user image - replace with your actual image import
+import userProfile from '../assets/logo/logo.png'; // Add your user image here
 
 const UserDashboard = () => {
     const user = false;
@@ -217,139 +219,32 @@ const UserDashboard = () => {
     );
 
 
-    // const links =
-    //     <ul>
-    //         {/* My Bookings */}
-    //         <li className="list-none border-y border-dashed hover:bg-gray-50">
-    //             <NavLink
-    //                 to="/dashboard/booking"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <FaCalendarAlt /> My Bookings
-    //             </NavLink>
-    //         </li>
-
-    //         {/* My Quotes */}
-    //         <li className="list-none border-b border-dashed hover:bg-gray-50">
-    //             <NavLink
-    //                 to="/dashboard/quotes"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <LuMenu className="text-[17px]" /> My Quotes
-    //             </NavLink>
-    //         </li>
-
-    //         {/* My Profile */}
-    //         <li className="list-none border-b border-dashed hover:bg-gray-50">
-    //             <NavLink
-    //                 to="/dashboard/profile"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <FaUser /> My Profile
-    //             </NavLink>
-    //         </li>
-
-    //         {/* Outstanding Payments */}
-    //         <li className="list-none border-b border-dashed hover:bg-gray-50">
-    //             <NavLink
-    //                 to="/dashboard/outstanding-payments"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <MdPayments /> Outstanding Payments
-    //             </NavLink>
-    //         </li>
-
-    //         {/* Saved Locations */}
-    //         <li className="list-none border-b border-dashed hover:bg-gray-50">
-    //             <NavLink
-    //                 to="/dashboard/saved-locations"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <FaLocationDot /> Saved Locations
-    //             </NavLink>
-    //         </li>
-
-    //         {/* Payment Methods */}
-    //         <li className="list-none border-b border-dashed hover:bg-gray-50">
-    //             <NavLink
-    //                 to="/dashboard/payment-methods"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <MdOutlinePayments /> Payment Methods
-    //             </NavLink>
-    //         </li>
-
-    //         {/* My Wallet */}
-    //         <li className="list-none border-b border-dashed hover:bg-gray-50">
-    //             <NavLink
-    //                 to="/dashboard/wallet"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <FaWallet /> My Wallet
-    //             </NavLink>
-    //         </li>
-
-    //         {/* Delete Account */}
-    //         <li className="list-none border-b border-dashed hover:bg-gray-50">
-    //             <NavLink
-    //                 to="/dashboard/delete-account"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <MdDeleteSweep /> Delete Account
-    //             </NavLink>
-    //         </li>
-
-    //         {/* Invite a Friend */}
-    //         <li className="list-none border-b border-dashed hover:bg-gray-50 flex justify-between items-center px-3 py-2">
-    //             <NavLink
-    //                 to="/dashboard/invite-friend"
-    //                 className={({ isActive }) =>
-    //                     `text-[14px] font-medium flex items-center gap-2 text-[#157D91] py-1 transition 
-    //                     ${isActive ? "font-extrabold" : ""}`
-    //                 }>
-    //                 <IoMdShare /> Invite a friend
-    //             </NavLink>
-
-    //             <span className="bg-[#ED6329] text-white text-[11px] px-2 py-0.5 rounded">
-    //                 Get 30 ৳ credit
-    //             </span>
-    //         </li>
-
-    //         {/* Logout */}
-    //         <li className="list-none flex items-center gap-1.5 py-3 px-3 hover:underline cursor-pointer text-[#157D91]">
-    //             <RiLogoutCircleLine />  Logout
-    //         </li>
-    //     </ul>
-
-
     return (
-        <div className="drawer lg:drawer-open max-w-7xl mx-auto mt-10 px-4">
+        <div className="drawer lg:drawer-open max-w-7xl mx-auto px-4">
             <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
 
             {/* Drawer Content */}
             <div className="drawer-content flex flex-col">
-                {/* Top Navbar for Mobile */}
-                <div className="w-full navbar flex justify-between lg:hidden">
+                {/* Top Navbar for Mobile - WITH IMAGE */}
+                <div className="w-full navbar flex justify-between items-center lg:hidden px-4 py-3 bg-white shadow-sm">
                     <div className="flex items-center gap-2">
-                        <label htmlFor="dashboard-drawer" className="btn btn-ghost lg:hidden">
+                        <label htmlFor="dashboard-drawer" className="btn btn-ghost lg:hidden p-2">
                             <MdMenu size={24} />
                         </label>
+                        {/* <Link to='/' className="flex items-center">
+                            <img className="w-32" src={logo} alt="logo" />
+                        </Link> */}
+                    </div>
+                    
+                    {/* User Image on Mobile Navbar */}
+                    <div className="flex items-center gap-3">
+                        <div className="relative">
+                            <img 
+                                src={userProfile} 
+                                alt="User" 
+                                className="w-10 h-10 rounded-full object-cover border-2 border-[#01788E]"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -362,7 +257,7 @@ const UserDashboard = () => {
             <div className="drawer-side border border-[#CED4DA]">
                 <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
 
-                <div className="md:w-72 bg-[#FFFFFF] p-2 relative">
+                <div className="md:w-72 bg-[#FFFFFF] p-2 relative min-h-screen">
 
                     {/* Mobile Close Button */}
                     <label
@@ -373,17 +268,35 @@ const UserDashboard = () => {
                     </label>
 
                     <div className="flex flex-col items-center justify-center mb-4">
-                        <Link to='/'>
+                        <Link to='/' className="mb-4">
                             <img className="w-52 md:mt-4" src={logo} alt="logo" />
                         </Link>
 
-                        <div className="text-center flex flex-col items-center mt-5 space-y-3">
-                            <h2 className="text-2xl text-[#5D4F52] font-bold">Rakib</h2>
-                            {/* <div className="flex items-center justify-center gap-1.5 text-xl w-[70px] bg-[#ED6329] py-1 rounded-md">
-                                <img className="h-4 w-4" src={dirhum} alt="dirhum" />
-                                <p>80</p>
+                        {/* User Info with Image - Professional Layout */}
+                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl w-full max-w-xs mb-4">
+
+                            {/* User Image */}
+                            {/* <div className="relative">
+                                <img 
+                                    src={userProfile} 
+                                    alt="User" 
+                                    className="w-14 h-14 rounded-full object-cover border-3 border-[#01788E] shadow-sm"
+                                />
+                                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                             </div> */}
-                            <p className="font-medium text-[#01788E]">Al Bada'a, Dubai</p>
+                            
+                            {/* User Details */}
+                            <div className="flex-1 text-center">
+                                <h2 className="text-lg font-bold text-gray-800">Rakib</h2>
+                                <p className="text-sm font-medium text-[#01788E] mt-1">Admin</p>
+                                <p className="text-xs text-gray-500 mt-0.5">Al Bada'a, Dubai</p>
+                                
+                                {/* Optional: Wallet Balance */}
+                                {/* <div className="flex items-center gap-1 mt-2">
+                                    <img className="h-3 w-3" src={dirhum} alt="dirhum" />
+                                    <p className="text-xs font-medium text-gray-700">80 Credits</p>
+                                </div> */}
+                            </div>
                         </div>
                     </div>
                     {links}
