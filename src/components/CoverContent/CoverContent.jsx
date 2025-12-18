@@ -69,7 +69,7 @@ const CoverContent = ({ content }) => {
                     onClick={() => handleOpenModal(property)}
                     className="group cursor-pointer transition-all duration-200 mb-6 p-4 md:p-0 rounded-lg border border-gray-100 hover:border-gray-200 md:border-0"
                 >
-                    <div className="md:flex md:items-start md:gap-4 lg:gap-6">
+                    <div className="md:flex md:items-start md:gap-4 lg:gap-6 border-b pb-3 border-gray-400">
                         {/* Image */}
                         <div className="relative mb-4 md:mb-0 md:flex-shrink-0 flex justify-center md:justify-start">
                             <img

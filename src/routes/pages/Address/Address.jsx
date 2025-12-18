@@ -195,7 +195,15 @@ const Address = () => {
                     </div>
                 </div>
 
-                <Summery serviceTitle={serviceTitle} itemSummary={itemSummary} total={serviceCharge + (serviceCharge * 0.05)} subTotal={serviceCharge} showInput={showInput} setShowInput={setShowInput} vat={vat} serviceCharge={serviceCharge} />
+                <Summery
+                    serviceTitle={serviceTitle}
+                    itemSummary={itemSummary}
+                    total={serviceCharge + (serviceCharge * 0.05)}
+                    subTotal={serviceCharge}
+                    showInput={showInput}
+                    setShowInput={setShowInput}
+                    vat={vat}
+                    serviceCharge={serviceCharge} />
             </div>
 
             <div className="hidden md:block">
