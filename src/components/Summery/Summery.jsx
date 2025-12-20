@@ -31,7 +31,7 @@ export default function Summary({
         setPromo("");
         setShowInput(false);
     };
-    console.log(itemSummary);
+
     return (
         <>
             {/* DESKTOP SUMMARY - DYNAMIC HEIGHT WITH STICKY */}

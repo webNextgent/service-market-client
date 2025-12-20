@@ -29,7 +29,6 @@ const Address = () => {
         return true;
     };
 
-
     const formatDisplayAddress = (type, data) => {
         switch (type) {
             case "Apartment":
@@ -206,8 +205,8 @@ const Address = () => {
                     vat={vat}
                     serviceCharge={serviceCharge}
                     isValid={isValid}
+                    onClick={handleNextClick}
                 />
-
             </div>
 
             <div className="hidden md:block">
