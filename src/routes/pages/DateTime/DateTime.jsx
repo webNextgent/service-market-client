@@ -287,10 +287,11 @@ const DateTime = () => {
                     date={selectedDay ? getFullDateLabel(selectedDay) : null}
                     time={selectedTime}
                     address={liveAddress?.displayAddress}
+                    isValid={!!selectedDay && !!selectedTime}
                 />
             </div>
             <div className="hidden md:block">
-                <NextBtn />
+                <NextBtn disabled={!selectedDay || !selectedTime} />
             </div>
         </div>
     );

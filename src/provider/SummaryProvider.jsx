@@ -69,7 +69,7 @@ export const SummaryProvider = ({ children }) => {
     const vat = Number((serviceCharge * 0.05).toFixed(2));
     const total = Number((serviceCharge + serviceFee + vat).toFixed(2));
 
-    const summeryInfo = { serviceCharge, serviceFee, subTotal, vat, total, services, button, setActiveId, activeId, content, itemSummary, showInput, setShowInput, date, setDate, time, setTime, serviceTitle, mapLatitude, setMapLatitude, mapLongitude, setMapLongitude, addressLocation, setAddressLocation,  liveAddress, setLiveAddress };
+    const summeryInfo = { serviceCharge, serviceFee, subTotal, vat, total, services, button, setActiveId, activeId, content, itemSummary, showInput, setShowInput, date, setDate, time, setTime, serviceTitle, mapLatitude, setMapLatitude, mapLongitude, setMapLongitude, addressLocation, setAddressLocation, liveAddress, setLiveAddress };
 
     return (
         <SummaryContext.Provider value={summeryInfo}>

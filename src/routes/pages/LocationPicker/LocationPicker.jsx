@@ -198,6 +198,7 @@ export default function LocationPicker() {
                     vat={vat}
                     serviceCharge={serviceCharge}
                     liveAddress={liveAddress}
+                    isValid={!isNextDisabled}
                 />
             </div>
             <div className="hidden md:block">

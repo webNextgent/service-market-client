@@ -29,6 +29,7 @@ const Address = () => {
         return true;
     };
 
+
     const formatDisplayAddress = (type, data) => {
         switch (type) {
             case "Apartment":
@@ -203,7 +204,10 @@ const Address = () => {
                     showInput={showInput}
                     setShowInput={setShowInput}
                     vat={vat}
-                    serviceCharge={serviceCharge} />
+                    serviceCharge={serviceCharge}
+                    isValid={isValid}
+                />
+
             </div>
 
             <div className="hidden md:block">

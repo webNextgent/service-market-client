@@ -29,7 +29,6 @@ const Services = () => {
             ...prev,
             [id]: 1,
         }));
-
         addItem(id);
     };
 
@@ -179,7 +178,7 @@ const Services = () => {
                                     <Card service={service} />
 
                                     {/* BUTTON SLIDER */}
-                                    <div className="px-2 md:px-9 bg-white py-3 sticky top-16 z-10">
+                                    <div className="px-2 md:px-9 bg-white py-3 sticky top-16 z-1">
                                         <div className="flex items-center justify-center gap-2">
                                             <button
                                                 onClick={() => {
@@ -254,9 +253,9 @@ const Services = () => {
                     </div>
                 </div>
 
-                <Summery serviceTitle={serviceTitle} itemSummary={itemSummary} total={serviceCharge + (serviceCharge * 0.05)} showInput={showInput} setShowInput={setShowInput} vat={vat} subTotal={serviceCharge} serviceCharge={serviceCharge} />
+                <Summery isValid={itemSummary.length !== 0} serviceTitle={serviceTitle} itemSummary={itemSummary} total={serviceCharge + (serviceCharge * 0.05)} showInput={showInput} setShowInput={setShowInput} vat={vat} subTotal={serviceCharge} serviceCharge={serviceCharge} />
             </div>
-            
+
             <div className="hidden md:block">
                 <NextBtn disabled={itemSummary.length === 0} />
             </div>
