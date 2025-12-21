@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import dirhum from "../../assets/icon/dirhum.png";
-import NextBtn from "../NextBtn/NextBtn";
 import { useItem } from "../../provider/ItemProvider";
 
 export default function Summary({ total, showInput, setShowInput, vat, subTotal, itemSummary, serviceCharge, address, date, time, serviceTitle, liveAddress, open, setOpen }) {
@@ -300,7 +299,7 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
                                                     {item.title}
                                                 </span>
                                             </div>
-                                            <p className="text-xs text-gray-500 ml-7 truncate">{serviceTitle[index]}</p>
+                                            <p className="text-xs text-gray-500 ml-7 truncate">{serviceTitle[index]} sdxfgkjhdfkgjh</p>
                                         </div>
                                         <div className="flex items-center gap-1 font-semibold text-gray-800 shrink-0 ml-2">
                                             <img src={dirhum} className="w-3.5 h-3.5" alt="currency" />

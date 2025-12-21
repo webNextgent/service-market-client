@@ -12,6 +12,8 @@ import { RiMacbookFill } from "react-icons/ri";
 import { SiServerless } from "react-icons/si";
 import { LuProportions } from "react-icons/lu";
 import { IoMdTime } from "react-icons/io";
+import { SiProton } from "react-icons/si";
+
 
 // Sample user image - replace with your actual image import
 import userProfile from '../assets/logo/logo.png'; // Add your user image here
@@ -205,6 +207,17 @@ const UserDashboard = () => {
 
                     <li className="list-none border-b border-dashed hover:bg-gray-50">
                         <NavLink
+                            to="/dashboard/add-promo-code"
+                            className={({ isActive }) =>
+                                `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
+                        ${isActive ? "font-extrabold" : ""}`
+                            }>
+                            <SiProton /> Add promo Code
+                        </NavLink>
+                    </li>
+
+                    <li className="list-none border-b border-dashed hover:bg-gray-50">
+                        <NavLink
                             to="/dashboard/admin-date-time"
                             className={({ isActive }) =>
                                 `text-[14px] font-medium flex items-center gap-2 text-[#157D91] px-3 py-2 transition 
@@ -235,13 +248,13 @@ const UserDashboard = () => {
                             <img className="w-32" src={logo} alt="logo" />
                         </Link> */}
                     </div>
-                    
+
                     {/* User Image on Mobile Navbar */}
                     <div className="flex items-center gap-3">
                         <div className="relative">
-                            <img 
-                                src={userProfile} 
-                                alt="User" 
+                            <img
+                                src={userProfile}
+                                alt="User"
                                 className="w-10 h-10 rounded-full object-cover border-2 border-[#01788E]"
                             />
                         </div>
@@ -284,13 +297,13 @@ const UserDashboard = () => {
                                 />
                                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                             </div> */}
-                            
+
                             {/* User Details */}
                             <div className="flex-1 text-center">
                                 <h2 className="text-lg font-bold text-gray-800">Rakib</h2>
                                 <p className="text-sm font-medium text-[#01788E] mt-1">Admin</p>
                                 <p className="text-xs text-gray-500 mt-0.5">Al Bada'a, Dubai</p>
-                                
+
                                 {/* Optional: Wallet Balance */}
                                 {/* <div className="flex items-center gap-1 mt-2">
                                     <img className="h-3 w-3" src={dirhum} alt="dirhum" />

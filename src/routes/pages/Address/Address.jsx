@@ -135,7 +135,7 @@ const Address = () => {
 
                             {selectedType === "Other" && (
                                 <>
-                                    <div>
+                                    {/* <div>
                                         <label className="block text-gray-700 font-medium mb-1">Nickname</label>
                                         <input
                                             {...register("nickname", { required: "Nickname is required" })}
@@ -144,7 +144,7 @@ const Address = () => {
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                                         />
                                         {errors.nickname && <p className="text-red-500 text-sm mt-1">{errors.nickname.message}</p>}
-                                    </div>
+                                    </div> */}
                                     <div>
                                         <label className="block text-gray-700 font-medium mb-1">Street / Building Name</label>
                                         <input
@@ -211,7 +211,7 @@ const Address = () => {
             </div>
 
             {/* for mobile & tablet view  */}
-            <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-9999">
+            {/* <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-9999">
                 <div onClick={() => setOpen(true)} className="cursor-pointer select-none">
                     <p className="text-[10px] text-gray-500">View Summary</p>
                     <p className="text-base font-bold flex items-center gap-1 text-gray-800">
@@ -221,7 +221,47 @@ const Address = () => {
                     </p>
                 </div>
                 <NextBtn onClick={handleNextClick} disabled={!isValid} />
+            </div> */}
+
+
+            {/* for mobile & tablet view  */}
+            <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-50">
+                {/* Summary Trigger Button */}
+                <button
+                    onClick={() => setOpen(true)}
+                    className="cursor-pointer select-none active:scale-[0.98] transition-transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg px-1 -ml-1"
+                    aria-label="View order summary"
+                    aria-expanded={open}
+                >
+                    <p className="text-[10px] text-gray-500 font-medium tracking-wide uppercase">
+                        View Summary
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                        <img
+                            src={dirhum}
+                            className="w-3.5 h-3.5 object-contain"
+                            alt="Currency icon"
+                            aria-hidden="true"
+                        />
+                        <span className="text-base font-bold text-gray-900 tabular-nums">
+                            {total.toFixed(2)}
+                        </span>
+                        <span
+                            className="text-gray-400 text-sm transform transition-transform duration-200"
+                            aria-hidden="true"
+                        >
+                            ›
+                        </span>
+                    </div>
+                </button>
+
+                {/* Checkout Button */}
+                <NextBtn
+                    onClick={handleNextClick}
+                    disabled={!isValid}
+                />
             </div>
+
 
 
             {/* for dextop  lg:view */}

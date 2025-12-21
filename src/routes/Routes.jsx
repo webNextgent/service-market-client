@@ -21,6 +21,7 @@ import AddPropertyItem from "../AdminDashboard/AddPropertyItem";
 import AdminDateTime from "../AdminDashboard/AdminDateTime";
 import LocationPicker from "./pages/LocationPicker/LocationPicker";
 import { createBrowserRouter } from "react-router-dom";
+import AddPromoCode from "../AdminDashboard/AddPromoCode";
 
 export const router = createBrowserRouter([
     {
@@ -61,6 +62,7 @@ export const router = createBrowserRouter([
             { path: 'add-service-type', element: <AddServiceType /> },
             { path: 'add-property-type', element: <AddPropertyType /> },
             { path: 'add-property-item', element: <AddPropertyItem /> },
+            { path: 'add-promo-code', element: <AddPromoCode /> },
             { path: 'admin-date-time', element: <AdminDateTime /> },
         ]
     }
