@@ -7,6 +7,7 @@ import Summery from "../../../components/Summery/Summery";
 import { useSummary } from "../../../provider/SummaryProvider";
 import ServiceDetails from "../../../components/ServiceDetails/ServiceDetails";
 import { useNavigate } from "react-router-dom";
+import dirhum from '../../../assets/icon/dirhum.png';
 
 const containerStyle = { width: "100%", height: "500px" };
 const defaultCenter = { lat: 23.8103, lng: 90.4125 };
@@ -18,7 +19,7 @@ export default function LocationPicker() {
         libraries: ["places"],
     });
 
-    const { itemSummary, vat, serviceCharge, showInput, setShowInput, address, serviceTitle, setMapLongitude, setMapLatitude, setAddressLocation, liveAddress } = useSummary();
+    const { itemSummary, vat, serviceCharge, showInput, setShowInput, address, serviceTitle, setMapLongitude, setMapLatitude, setAddressLocation, liveAddress, total } = useSummary();
 
     const [isNextDisabled, setIsNextDisabled] = useState(true);
     const [mapAddressSelected, setMapAddressSelected] = useState(false);
@@ -27,6 +28,7 @@ export default function LocationPicker() {
     const [map, setMap] = useState(null);
     const [autocomplete, setAutocomplete] = useState(null);
     const [mapType, setMapType] = useState("roadmap");
+    const [open, setOpen] = useState(false);
 
 
     const getAddressFromLatLng = (lat, lng) => {
@@ -199,8 +201,27 @@ export default function LocationPicker() {
                     serviceCharge={serviceCharge}
                     liveAddress={liveAddress}
                     isValid={!isNextDisabled}
+                    open={open}
+                    setOpen={setOpen}
                 />
             </div>
+
+            {/* for mobile & tablet view  */}
+            <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-50">
+                <div onClick={() => setOpen(true)} className="cursor-pointer select-none">
+                    <p className="text-[10px] text-gray-500">View Summary</p>
+                    <p className="text-base font-bold flex items-center gap-1 text-gray-800">
+                        <img src={dirhum} className="w-3.5 h-3.5" alt="currency" />
+                        {total.toFixed(2)}
+                        <span className="text-gray-400 text-sm ml-0.5">›</span>
+                    </p>
+                </div>
+                <NextBtn
+                    disabled={isNextDisabled}
+                    onClick={handleNextClick}
+                />
+            </div>
+
             <div className="hidden md:block">
                 <NextBtn
                     disabled={isNextDisabled}

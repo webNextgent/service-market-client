@@ -6,12 +6,14 @@ import { useSummary } from "../../../provider/SummaryProvider";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { useQuery } from "@tanstack/react-query";
+import dirhum from '../../../assets/icon/dirhum.png';
 
 const DateTime = () => {
     const [selectedDay, setSelectedDay] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
     const scrollerRef = useRef(null);
-    const { itemSummary, vat, serviceCharge, serviceTitle, showInput, setShowInput, setDate, setTime, liveAddress } = useSummary();
+    const [open, setOpen] = useState(false);
+    const { itemSummary, vat, serviceCharge, serviceTitle, showInput, setShowInput, setDate, setTime, liveAddress, total } = useSummary();
 
     const { data: dateTime, isLoading } = useQuery({
         queryKey: ['date-time-user'],
@@ -288,8 +290,24 @@ const DateTime = () => {
                     time={selectedTime}
                     address={liveAddress?.displayAddress}
                     isValid={!!selectedDay && !!selectedTime}
+                    open={open}
+                    setOpen={setOpen}
                 />
             </div>
+
+            {/* for mobile & tablet view  */}
+            <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-50">
+                <div onClick={() => setOpen(true)} className="cursor-pointer select-none">
+                    <p className="text-[10px] text-gray-500">View Summary</p>
+                    <p className="text-base font-bold flex items-center gap-1 text-gray-800">
+                        <img src={dirhum} className="w-3.5 h-3.5" alt="currency" />
+                        {total.toFixed(2)}
+                        <span className="text-gray-400 text-sm ml-0.5">›</span>
+                    </p>
+                </div>
+                <NextBtn disabled={!selectedDay || !selectedTime} />
+            </div>
+
             <div className="hidden md:block">
                 <NextBtn disabled={!selectedDay || !selectedTime} />
             </div>

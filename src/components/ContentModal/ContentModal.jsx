@@ -38,7 +38,7 @@ const ContentModal = ({ setShowModal, property }) => {
 
     if (!property) {
         return (
-            <div className="fixed inset-0 text-[#5D4F52] bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="fixed inset-0 text-[#5D4F52] bg-black/70 flex items-center justify-center z- p-4">
                 <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
                     <p className="text-gray-600 mb-4">No property data found.</p>
                     <button

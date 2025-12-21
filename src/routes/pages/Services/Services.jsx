@@ -14,7 +14,7 @@ import { useItem } from "../../../provider/ItemProvider";
 import { useSummary } from "../../../provider/SummaryProvider";
 
 const Services = () => {
-    const { services, button, setActiveId, activeId, content, itemSummary, vat, serviceCharge, showInput, setShowInput, serviceTitle } = useSummary();
+    const { services, button, setActiveId, activeId, content, itemSummary, vat, serviceCharge, showInput, setShowInput, serviceTitle, total } = useSummary();
 
     const { addItem, removeItem } = useItem();
     const sectionRefs = useRef({});
@@ -23,6 +23,7 @@ const Services = () => {
     const [suggestions, setSuggestions] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [showBackdrop, setShowBackdrop] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleAdd = (id) => {
         setQuantities((prev) => ({
@@ -253,7 +254,21 @@ const Services = () => {
                     </div>
                 </div>
 
-                <Summery isValid={itemSummary.length !== 0} serviceTitle={serviceTitle} itemSummary={itemSummary} total={serviceCharge + (serviceCharge * 0.05)} showInput={showInput} setShowInput={setShowInput} vat={vat} subTotal={serviceCharge} serviceCharge={serviceCharge} />
+                <Summery isValid={itemSummary.length !== 0} serviceTitle={serviceTitle} itemSummary={itemSummary} total={serviceCharge + (serviceCharge * 0.05)} showInput={showInput} setShowInput={setShowInput} vat={vat} subTotal={serviceCharge} serviceCharge={serviceCharge} open={open} setOpen={setOpen} />
+            </div>
+
+
+            {/* for mobile & tablet view  */}
+            <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-50">
+                <div onClick={() => setOpen(true)} className="cursor-pointer select-none">
+                    <p className="text-[10px] text-gray-500">View Summary</p>
+                    <p className="text-base font-bold flex items-center gap-1 text-gray-800">
+                        <img src={dirhum} className="w-3.5 h-3.5" alt="currency" />
+                        {total.toFixed(2)}
+                        <span className="text-gray-400 text-sm ml-0.5">›</span>
+                    </p>
+                </div>
+                <NextBtn disabled={itemSummary.length === 0} />
             </div>
 
             <div className="hidden md:block">

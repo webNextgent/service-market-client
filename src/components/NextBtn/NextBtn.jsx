@@ -4,11 +4,9 @@ import { steps } from "./FlowSteps";
 const NextBtn = ({ name = "Next", disabled, onClick }) => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
-
     const currentIndex = steps.indexOf(pathname);
     let nextPath = steps[currentIndex + 1];
     let isDisabled = disabled ?? false;
-
 
     const handleClick = async () => {
         let shouldNavigate = true;

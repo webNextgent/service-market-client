@@ -3,23 +3,9 @@ import dirhum from "../../assets/icon/dirhum.png";
 import NextBtn from "../NextBtn/NextBtn";
 import { useItem } from "../../provider/ItemProvider";
 
-export default function Summary({
-    total,
-    showInput,
-    setShowInput,
-    vat,
-    subTotal,
-    itemSummary,
-    serviceCharge,
-    address,
-    date,
-    time,
-    serviceTitle,
-    liveAddress,
-    isValid
-}) {
+export default function Summary({ total, showInput, setShowInput, vat, subTotal, itemSummary, serviceCharge, address, date, time, serviceTitle, liveAddress, open, setOpen }) {
     const [promo, setPromo] = useState("");
-    const [open, setOpen] = useState(false);
+
     const scrollContainerRef = useRef(null);
     const { removeItem } = useItem();
 
@@ -86,7 +72,7 @@ export default function Summary({
                                                     <div className="flex items-start gap-2 flex-1">
                                                         <button
                                                             onClick={() => removeItem(item.id)}
-                                                            className="w-5 h-5 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors text-[10px] mt-0.5 flex-shrink-0"
+                                                            className="w-5 h-5 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors text-[10px] mt-0.5 shrink-0"
                                                         >
                                                             ✕
                                                         </button>
@@ -97,7 +83,7 @@ export default function Summary({
                                                             <p className="text-xs text-gray-500 mt-0.5 truncate">{serviceTitle[index]}</p>
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center gap-1 font-semibold text-gray-800 flex-shrink-0 ml-2">
+                                                    <div className="flex items-center gap-1 font-semibold text-gray-800 shrink-0 ml-2">
                                                         <img src={dirhum} alt="" className="w-3.5 h-3.5" />
                                                         <span className="text-sm">{item.price}</span>
                                                     </div>
@@ -133,7 +119,7 @@ export default function Summary({
                                     <div>
                                         <h3 className="font-semibold text-gray-700 mb-2 text-xs uppercase tracking-wider">Address</h3>
                                         <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                                            <p className="text-sm text-gray-700 leading-relaxed break-words">{address}</p>
+                                            <p className="text-sm text-gray-700 leading-relaxed wrap-break-word">{address}</p>
                                         </div>
                                     </div>
                                 )}
@@ -219,7 +205,7 @@ export default function Summary({
             </div>
 
             {/* MOBILE BOTTOM BAR */}
-            <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-9999">
+            {/* <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-9999">
                 <div onClick={() => setOpen(true)} className="cursor-pointer select-none">
                     <p className="text-[10px] text-gray-500">View Summary</p>
                     <p className="text-base font-bold flex items-center gap-1 text-gray-800">
@@ -229,7 +215,7 @@ export default function Summary({
                     </p>
                 </div>
                 <NextBtn disabled={!isValid} />
-            </div>
+            </div> */}
 
             {/* BACKDROP FOR MOBILE */}
             {open && (
@@ -255,7 +241,7 @@ export default function Summary({
                 </div>
 
                 {/* Header */}
-                <div className="px-4 py-3 border-b border-gray-100 flex-shrink-0">
+                <div className="px-4 py-3 border-b border-gray-100 shrink-0">
                     <div className="flex justify-between items-center">
                         <div>
                             <h2 className="text-lg font-bold text-gray-800">Order Summary</h2>
@@ -306,7 +292,7 @@ export default function Summary({
                                             <div className="flex items-center gap-2 mb-1">
                                                 <button
                                                     onClick={() => removeItem(item.id)}
-                                                    className="w-5 h-5 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors text-[10px] flex-shrink-0"
+                                                    className="w-5 h-5 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors text-[10px] shrink-0"
                                                 >
                                                     ✕
                                                 </button>
@@ -316,7 +302,7 @@ export default function Summary({
                                             </div>
                                             <p className="text-xs text-gray-500 ml-7 truncate">{serviceTitle[index]}</p>
                                         </div>
-                                        <div className="flex items-center gap-1 font-semibold text-gray-800 flex-shrink-0 ml-2">
+                                        <div className="flex items-center gap-1 font-semibold text-gray-800 shrink-0 ml-2">
                                             <img src={dirhum} className="w-3.5 h-3.5" alt="currency" />
                                             <span className="text-sm">{item.price}</span>
                                         </div>
@@ -351,7 +337,7 @@ export default function Summary({
                             <div>
                                 <h3 className="font-semibold text-gray-700 mb-2 text-xs uppercase tracking-wider">Address</h3>
                                 <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                                    <p className="text-sm text-gray-800 leading-relaxed break-words">{address}</p>
+                                    <p className="text-sm text-gray-800 leading-relaxed wrap-break-word">{address}</p>
                                 </div>
                             </div>
                         )}
