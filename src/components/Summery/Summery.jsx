@@ -1,21 +1,45 @@
 import { useState, useRef } from "react";
 import dirhum from "../../assets/icon/dirhum.png";
 import { useItem } from "../../provider/ItemProvider";
+import toast from "react-hot-toast";
 
 export default function Summary({ total, showInput, setShowInput, vat, subTotal, itemSummary, serviceCharge, address, date, time, serviceTitle, liveAddress, open, setOpen }) {
     const [promo, setPromo] = useState("");
-
     const scrollContainerRef = useRef(null);
     const { removeItem } = useItem();
 
-    const handleApply = () => {
-        if (promo.trim() === "") {
-            alert("Please enter a promo code!");
-            return;
+
+    const handleApply = async () => {
+        try {
+            const res = await fetch(
+                "https://job-task-nu.vercel.app/api/v1/promo-code/use-promo-code/6947c2d395c2c51a68b5414f",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        code: promo
+                    })
+                }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data?.message);
+                console.log("Error:", data.message);
+                return;
+            }
+
+            console.log("Success:", data);
+            toast.success("Promo applied successfully");
+
+        } catch (error) {
+            console.error("Network error:", error);
         }
-        setPromo("");
-        setShowInput(false);
     };
+
 
     return (
         <>
@@ -143,7 +167,7 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
                                                 className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-[#01788E] focus:border-transparent outline-none"
                                             />
                                             <button
-                                                onClick={handleApply}
+                                                onClick={() => handleApply(promo)}
                                                 className="bg-[#01788E] text-white px-4 py-2 rounded-lg hover:bg-[#016a7a] transition-colors text-sm"
                                             >
                                                 Apply
