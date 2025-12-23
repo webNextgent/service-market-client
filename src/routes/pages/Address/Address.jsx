@@ -8,7 +8,7 @@ import { generateId } from "./Map/generateId";
 import dirhum from "../../../assets/icon/dirhum.png";
 
 const Address = () => {
-    const { itemSummary, vat, serviceCharge, showInput, setShowInput, serviceTitle, setLiveAddress, total } = useSummary();
+    const { itemSummary, vat, serviceCharge, showInput, setShowInput, serviceTitle, setLiveAddress, total, setSaveAddress } = useSummary();
     const [selectedType, setSelectedType] = useState("Apartment");
     const buttons = ["Apartment", "Villa", "Office", "Other"];
     const [open, setOpen] = useState(false);
@@ -17,18 +17,29 @@ const Address = () => {
         mode: "onChange",
         shouldUnregister: true
     });
-    const id = generateId();
+
 
     const onSubmit = (data) => {
         const finalData = {
-            id,
+            id: generateId(), // ✅ এখানে
             type: selectedType,
             ...data,
             displayAddress: formatDisplayAddress(selectedType, data)
         };
         setLiveAddress(finalData);
+
+        setSaveAddress(prev => {
+            const exists = prev.some(addr =>
+                addr.displayAddress === finalData.displayAddress
+            );
+            return exists ? prev : [...prev, finalData];
+        });
+
         return true;
     };
+
+
+
 
     const formatDisplayAddress = (type, data) => {
         switch (type) {

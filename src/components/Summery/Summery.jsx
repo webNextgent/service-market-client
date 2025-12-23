@@ -8,6 +8,12 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
     const scrollContainerRef = useRef(null);
     const { removeItem } = useItem();
 
+    const displayAddress =
+        liveAddress?.displayAddress ||
+        address ||
+        "";
+
+
 
     const handleApply = async () => {
         try {
@@ -138,14 +144,20 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
                                 )}
 
                                 {/* Address */}
-                                {(liveAddress || (address && address.length > 0)) && (
+                                {displayAddress && (
                                     <div>
-                                        <h3 className="font-semibold text-gray-700 mb-2 text-xs uppercase tracking-wider">Address</h3>
+                                        <h3 className="font-semibold text-gray-700 mb-2 text-xs uppercase tracking-wider">
+                                            Address
+                                        </h3>
+
                                         <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                                            <p className="text-sm text-gray-700 leading-relaxed wrap-break-word">{address}</p>
+                                            <p className="text-sm text-gray-800 leading-relaxed">
+                                                {displayAddress}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
+
 
                                 {/* Discount Section */}
                                 <div>
@@ -356,14 +368,20 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
                         )}
 
                         {/* Address */}
-                        {(liveAddress || (address && address.length > 0)) && (
+                        {displayAddress && (
                             <div>
-                                <h3 className="font-semibold text-gray-700 mb-2 text-xs uppercase tracking-wider">Address</h3>
+                                <h3 className="font-semibold text-gray-700 mb-2 text-xs uppercase tracking-wider">
+                                    Address
+                                </h3>
+
                                 <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                                    <p className="text-sm text-gray-800 leading-relaxed wrap-break-word">{address}</p>
+                                    <p className="text-sm text-gray-800 leading-relaxed">
+                                        {displayAddress}
+                                    </p>
                                 </div>
                             </div>
                         )}
+
 
                         {/* Charges Breakdown */}
                         <div>
@@ -407,20 +425,6 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
                         </div>
                     </div>
                 </div>
-
-                {/* Fixed Bottom Action */}
-                {/* <div className="border-t border-gray-100 bg-white px-4 py-3 flex-shrink-0">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-xs text-gray-500">Total Payable</p>
-                            <p className="text-lg font-bold flex items-center gap-1 text-gray-800">
-                                <img src={dirhum} className="w-4.5 h-4.5" alt="currency" />
-                                {total.toFixed(2)}
-                            </p>
-                        </div>
-                        <NextBtn />
-                    </div>
-                </div> */}
             </div>
         </>
     );

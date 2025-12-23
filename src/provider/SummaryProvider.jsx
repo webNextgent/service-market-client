@@ -22,6 +22,26 @@ export const SummaryProvider = ({ children }) => {
     const [mapLongitude, setMapLongitude] = useState("");
     const [liveAddress, setLiveAddress] = useState("");
 
+    const [saveAddress, setSaveAddress] = useState(() => {
+        const stored = localStorage.getItem("saveAddress");
+        if (!stored) return [];
+
+        try {
+            const parsed = JSON.parse(stored);
+            return Array.isArray(parsed) ? parsed : [];
+            // eslint-disable-next-line no-unused-vars
+        } catch (err) {
+            console.error("Invalid saveAddress in localStorage:", stored);
+            localStorage.removeItem("saveAddress");
+            return [];
+        }
+    });
+
+
+    useEffect(() => {
+        localStorage.setItem("saveAddress", JSON.stringify(saveAddress));
+    }, [saveAddress]);
+
 
     useEffect(() => {
         const sections = document.querySelectorAll("[id^='content-']");
@@ -69,7 +89,7 @@ export const SummaryProvider = ({ children }) => {
     const vat = Number((serviceCharge * 0.05).toFixed(2));
     const total = Number((serviceCharge + serviceFee + vat).toFixed(2));
 
-    const summeryInfo = { serviceCharge, serviceFee, subTotal, vat, total, services, button, setActiveId, activeId, content, itemSummary, showInput, setShowInput, date, setDate, time, setTime, serviceTitle, mapLatitude, setMapLatitude, mapLongitude, setMapLongitude, addressLocation, setAddressLocation, liveAddress, setLiveAddress };
+    const summeryInfo = { serviceCharge, serviceFee, subTotal, vat, total, services, button, setActiveId, activeId, content, itemSummary, showInput, setShowInput, date, setDate, time, setTime, serviceTitle, mapLatitude, setMapLatitude, mapLongitude, setMapLongitude, addressLocation, setAddressLocation, liveAddress, setLiveAddress, saveAddress, setSaveAddress };
 
     return (
         <SummaryContext.Provider value={summeryInfo}>

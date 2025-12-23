@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 
 export default function BookingDetails() {
     const item = useLoaderData();
-    const { mapLongitude, mapLatitude, serviceCharge, serviceFee, subTotal, vat, total } = useSummary();
+    const { mapLongitude, mapLatitude, serviceCharge, serviceFee, subTotal, vat, total, saveAddress } = useSummary();
     const [openInstructionsModal, setOpenInstructionsModal] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [instructions, setInstructions] = useState("");
@@ -29,7 +29,7 @@ export default function BookingDetails() {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(item?.Data?.paymentMethod || "Cash");
     const [isUpdatingPayment, setIsUpdatingPayment] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm({
         mode: "onChange"
     });
 
