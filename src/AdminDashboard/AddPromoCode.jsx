@@ -13,7 +13,6 @@ const AddPromoCode = () => {
     const [editingId, setEditingId] = useState(null);
     const [editData, setEditData] = useState({ code: '', expiryDate: '', discount: '' });
 
-    // Load existing promo codes from server
     useEffect(() => {
         fetchPromoCodes();
     }, []);
@@ -78,6 +77,7 @@ const AddPromoCode = () => {
             });
 
             const data = await response.json();
+            console.log(data);
 
             if (data.success) {
                 setSuccess('Promo code added successfully!');
@@ -326,9 +326,7 @@ const AddPromoCode = () => {
                                 <div className="relative">
                                     <input
                                         type="number"
-                                        step="0.01"
-                                        min="0.01"
-                                        max="1000"
+                                       
                                         value={editingId ? editData.discount : discount}
                                         onChange={(e) => {
                                             const value = Math.max(0.01, Math.min(1000, parseFloat(e.target.value) || 0));

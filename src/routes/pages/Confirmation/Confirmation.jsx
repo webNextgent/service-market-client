@@ -23,6 +23,8 @@ export default function Confirmation() {
     const navigate = useNavigate();
     const ides = itemSummary.map(p => p.id);
 
+    console.log(itemSummary);
+
     const REQUIRED_FIELDS = [
         "propertyItemIds",
         "serviceName",

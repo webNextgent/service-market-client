@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
-import { FiMessageCircle } from "react-icons/fi";
-import { FiPhone } from "react-icons/fi";
+import { FiMessageCircle, FiPhone } from "react-icons/fi";
 import { useLoaderData } from "react-router-dom";
 import { useSummary } from "../../../provider/SummaryProvider";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -9,11 +8,14 @@ import dirhum from '../../../assets/icon/dirhum.png';
 import { useQuery } from "@tanstack/react-query";
 import { LuArrowLeft } from "react-icons/lu";
 import { useForm } from "react-hook-form";
-
+import { MdLocationOn, MdCalendarToday, MdPayment, MdInfo } from "react-icons/md";
+import { HiBuildingOffice, HiHome } from "react-icons/hi2";
+import { BsClock, BsTag } from "react-icons/bs";
+import { TbReceipt } from "react-icons/tb";
 
 export default function BookingDetails() {
     const item = useLoaderData();
-    const { mapLongitude, mapLatitude, serviceCharge, serviceFee, subTotal, vat, total, saveAddress } = useSummary();
+    const { mapLongitude, mapLatitude, serviceCharge, serviceFee, subTotal, vat, total } = useSummary();
     const [openInstructionsModal, setOpenInstructionsModal] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [instructions, setInstructions] = useState("");
@@ -34,7 +36,7 @@ export default function BookingDetails() {
     });
 
     const [selectedType, setSelectedType] = useState("Apartment");
-    const buttons = ["Apartment", "Villa", "Office", "Other"];
+    const propertyTypes = ["Apartment", "Villa", "Office", "Other"];
 
     const handelReschudeleFun = () => {
         setModalRescudle(true);
@@ -58,7 +60,7 @@ export default function BookingDetails() {
 
     const handleChangePaymentMethod = () => {
         setModalPaymentMethod(true);
-    }
+    };
 
     // Extract address parts from the string
     const extractAddressParts = (addressString) => {
@@ -72,7 +74,6 @@ export default function BookingDetails() {
             };
         }
 
-        // Split the address string by " - "
         const parts = addressString.split(" - ").map(part => part.trim());
 
         return {
@@ -211,7 +212,6 @@ export default function BookingDetails() {
     // Handle type change
     const handleTypeChange = (type) => {
         setSelectedType(type);
-        // Reset related fields when type changes
         if (type === "Villa") {
             setValue("buildingName", "");
             setValue("apartmentNo", "");
@@ -238,7 +238,6 @@ export default function BookingDetails() {
             return false;
         }
 
-        // Create the formatted address
         const formattedAddress = formatDisplayAddress(selectedType, data);
 
         const updateData = {
@@ -249,7 +248,6 @@ export default function BookingDetails() {
         setIsUpdatingAddress(true);
 
         try {
-            // Try different API endpoints
             const endpoints = [
                 `${import.meta.env.VITE_BACKEND_API_URL}/booking/userBooking/${bookingId}`,
                 `${import.meta.env.VITE_BACKEND_API_URL}/booking/${bookingId}`,
@@ -311,7 +309,6 @@ export default function BookingDetails() {
         setIsUpdatingPayment(true);
 
         try {
-            // Try different API endpoints
             const endpoints = [
                 `${import.meta.env.VITE_BACKEND_API_URL}/booking/userBooking/${bookingId}`,
                 `${import.meta.env.VITE_BACKEND_API_URL}/booking/${bookingId}`,
@@ -372,13 +369,11 @@ export default function BookingDetails() {
                     city: parts[3] || ""
                 };
 
-                // Set form values
                 setValue("apartmentNo", formData.apartmentNo);
                 setValue("buildingName", formData.buildingName);
                 setValue("area", formData.area);
                 setValue("city", formData.city);
 
-                // Set type based on current address
                 setSelectedType("Apartment");
             }
         }
@@ -448,7 +443,6 @@ export default function BookingDetails() {
         }
     }, [dateTime, selectedDay]);
 
-
     const handleUserUpdateBookingStatus = async (id) => {
         try {
             const res = await fetch(
@@ -464,9 +458,9 @@ export default function BookingDetails() {
 
             const data = await res.json();
             if (data.success) {
-                alert("Booking cancel successfully!");
+                alert("Booking cancelled successfully!");
             } else {
-                alert("Failed to Cancel booking");
+                alert("Failed to cancel booking");
             }
         } catch (error) {
             console.error("Update error:", error);
@@ -475,179 +469,350 @@ export default function BookingDetails() {
     };
 
     return (
-        <div className="w-full min-h-screen p-4 flex justify-center items-start">
-            <div className="w-full max-w-6xl bg-white rounded-xl shadow-xl p-4 mt-10">
-                {/* Booking confirmed */}
-                <div className="shadow-md rounded-lg p-4 space-y-1.5 md:space-y-0  md:flex items-center md:justify-between bg-gray-50">
-                    <div>
-                        <p className="font-semibold">Booking confirmed</p>
-                        <p className="text-sm text-gray-500">
-                            Your booking is confirmed and will be delivered as per the booked date and time
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"><FaUser /></div>
-                            <p className="text-sm font-medium">Supreme P.</p>
+        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-5xl mx-auto">
+                {/* Header Section */}
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Booking Details</h1>
+                    <p className="text-gray-600">Manage your booking and view all details</p>
+                </div>
+
+                {/* Main Content Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Left Column - Booking Info */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Confirmation Card */}
+                        <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl shadow-sm border border-blue-100 p-6">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                <div>
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="w-10 h-10 rounded-full bg-white border border-blue-200 flex items-center justify-center">
+                                            <BsClock className="text-blue-600 text-lg" />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-semibold text-gray-900">Booking Confirmed</h2>
+                                            <p className="text-sm text-gray-600">Booking ID: {item?.Data?.id || "N/A"}</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-gray-700 mt-3">
+                                        Your booking is confirmed and will be delivered as per the booked date and time
+                                    </p>
+                                    <div className="flex items-center gap-3 mt-4">
+                                        <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center">
+                                            <FaUser className="text-gray-700" />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-gray-900">Supreme P.</p>
+                                            <p className="text-sm text-gray-600">Service Provider</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-3">
+                                    <button className="p-3 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 transition shadow-sm">
+                                        <FiMessageCircle className="text-xl text-gray-700" />
+                                    </button>
+                                    <button className="p-3 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 transition shadow-sm">
+                                        <FiPhone className="text-xl text-gray-700" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Rating Section */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                <BsTag className="text-blue-600" />
+                                Rate Your Experience
+                            </h3>
+                            <div className="rating rating-lg">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <input
+                                        key={star}
+                                        type="radio"
+                                        name="rating-9"
+                                        className="mask mask-star-2 bg-orange-400"
+                                        aria-label={`${star} star`}
+                                    />
+                                ))}
+                            </div>
+                            <p className="text-sm text-gray-500 mt-2">Share your experience to help us improve</p>
+                        </div>
+
+                        {/* Job Details Card */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                                <MdInfo className="text-blue-600" />
+                                Job Details
+                            </h3>
+                            <div className="space-y-5">
+                                <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                                            <MdCalendarToday className="text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-gray-700">Start Time</p>
+                                            <p className="text-sm text-gray-500">{item?.Data?.date}, {item?.Data?.time}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
+                                            <MdLocationOn className="text-green-600" />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-gray-700">Address</p>
+                                            <p className="text-sm text-gray-500">{item?.Data?.address}</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handelAddressDetails(item)}
+                                        className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                                    >
+                                        View
+                                        <IoIosArrowForward />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Service Details Card */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                                <HiBuildingOffice className="text-blue-600" />
+                                Service Details
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                                    <div>
+                                        <p className="font-medium text-gray-900">Studio - General</p>
+                                        <p className="text-sm text-gray-600">Quantity: 1</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-sm text-gray-600">Service Type</p>
+                                        <p className="font-medium text-gray-900">{item?.Data?.serviceName}</p>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                                    <div className="flex items-center gap-2">
+                                        <BsTag className="text-gray-600" />
+                                        <span className="font-medium text-gray-700">Service Fee</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <img src={dirhum} alt="Currency" className="w-5 h-5" />
+                                        <span className="text-lg font-semibold text-gray-900">{item.Data?.serviceFee}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="flex gap-3 text-gray-600 text-xl">
-                        <button className="bg-[#01788E] p-2 rounded-full text-white cursor-pointer"><FiMessageCircle /></button>
-                        <button className="bg-[#01788E] p-2 rounded-full text-white cursor-pointer"><FiPhone /></button>
+
+                    {/* Right Column - Payment & Actions */}
+                    <div className="space-y-6">
+                        {/* Payment Summary Card */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                                <TbReceipt className="text-blue-600" />
+                                Payment Summary
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <div className="flex items-center gap-2">
+                                        <MdPayment className="text-gray-600" />
+                                        <span className="font-medium text-gray-700">Payment Method</span>
+                                    </div>
+                                    <span className="font-medium text-gray-900">{item?.Data?.paymentMethod}</span>
+                                </div>
+                                <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg">
+                                    <div>
+                                        <p className="font-semibold text-gray-900">Total to Pay</p>
+                                        <p className="text-sm text-gray-600">Inclusive of all charges</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="flex items-center gap-1">
+                                            <img src={dirhum} alt="Currency" className="w-6 h-6" />
+                                            <span className="text-2xl font-bold text-gray-900">{item.Data?.totalPay}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => handelTotalPay(item)}
+                                    className="w-full mt-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium rounded-xl transition flex items-center justify-center gap-2"
+                                >
+                                    View Detailed Breakdown
+                                    <IoIosArrowForward />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Manage Booking Card */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-6">Manage Booking</h3>
+                            <div className="space-y-3">
+                                <button
+                                    onClick={() => setOpenModal(true)}
+                                    className="w-full py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl transition shadow-md hover:shadow-lg"
+                                >
+                                    Manage Booking Options
+                                </button>
+                                <p className="text-sm text-gray-500 text-center mt-2">
+                                    Reschedule, add instructions, or make changes to your booking
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Quick Actions */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    onClick={handelReschudeleFun}
+                                    className="p-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition flex flex-col items-center gap-2"
+                                >
+                                    <MdCalendarToday className="text-xl" />
+                                    <span className="text-sm font-medium">Reschedule</span>
+                                </button>
+                                <button
+                                    onClick={() => setOpenInstructionsModal(true)}
+                                    className="p-3 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition flex flex-col items-center gap-2"
+                                >
+                                    <FiMessageCircle className="text-xl" />
+                                    <span className="text-sm font-medium">Instructions</span>
+                                </button>
+                                <button
+                                    onClick={() => setModalAddressUpdate(true)}
+                                    className="p-3 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg transition flex flex-col items-center gap-2"
+                                >
+                                    <MdLocationOn className="text-xl" />
+                                    <span className="text-sm font-medium">Address</span>
+                                </button>
+                                <button
+                                    onClick={handleChangePaymentMethod}
+                                    className="p-3 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg transition flex flex-col items-center gap-2"
+                                >
+                                    <MdPayment className="text-xl" />
+                                    <span className="text-sm font-medium">Payment</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                {/* Rate Experience */}
-                <div className="mt-6 shadow-md p-4 rounded-lg">
-                    <p className="font-medium mb-2">Rate your experience:</p>
-                    <div className="rating rating-md">
-                        <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="1 star" />
-                        <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="2 star" defaultChecked />
-                        <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="3 star" />
-                        <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="4 star" />
-                        <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="5 star" />
-                    </div>
-                </div>
-
-                {/* Job Details */}
-                <div className="mt-6 shadow rounded-lg p-4">
-                    <h2 className="font-semibold mb-2">Job Details</h2>
-
-                    <div className="flex justify-between">
-                        <p>Booking Ref.</p>
-                        <p className="text-gray-500 font-medium">20251119000426MPDXB</p>
-                    </div>
-
-                    <div className="flex justify-between py-2">
-                        <p>Start time</p>
-                        <p className="text-gray-500 font-medium">{item?.Data?.date}, {item?.Data?.time}</p>
-                    </div>
-
-                    <div className="flex justify-between py-2">
-                        <p>Address</p>
-                        <p onClick={() => handelAddressDetails(item)} className="flex items-center text-gray-500 cursor-pointer bg-gray-50 font-medium">{item?.Data?.address} <IoIosArrowForward className="text-xl" /></p>
-                    </div>
-                </div>
-
-                {/* Service */}
-                <div className="mt-6 rounded-lg p-4 shadow-md">
-                    <h2 className="font-semibold mb-2">Service</h2>
-
-                    <div className="flex justify-between py-2">
-                        <p>Studio - General x 1</p>
-                        <p className="text-gray-500">{item?.Data?.serviceName}</p>
-                    </div>
-
-                    <div className="flex justify-between py-2">
-                        <p>Service Fee</p>
-                        <p className="font-semibold flex items-center gap-1"><img src={dirhum} alt="" className="w-4 h-4" />{item.Data?.serviceFee}</p>
-                    </div>
-                </div>
-
-                {/* Payment Summary */}
-                <div className="mt-6 rounded-lg p-4 shadow-md">
-                    <h2 className="font-semibold mb-2">Payment Summary</h2>
-
-                    <div className="flex justify-between py-2">
-                        <p>Payment method</p>
-                        <p className="text-gray-500">{item?.Data?.paymentMethod}</p>
-                    </div>
-
-                    <div className="flex justify-between py-2">
-                        <p>Total to Pay</p>
-                        <p onClick={() => handelTotalPay(item)} className="font-semibold flex items-center cursor-pointer bg-gray-50"><img src={dirhum} alt="" className="w-4 h-4" />{item.Data?.totalPay}<IoIosArrowForward className="text-xl" /></p>
-                    </div>
-                </div>
-
-                {/* Manage Booking */}
-                <div className="flex justify-center mt-6">
-                    <button onClick={() => setOpenModal(true)} className="bg-orange-600 text-white py-2 px-6 rounded-lg hover:bg-orange-700 transition">
-                        Manage Booking
-                    </button>
                 </div>
 
                 {/* Manage Booking Modal */}
                 {openModal &&
-                    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black bg-opacity-50"
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
                         onClick={() => setOpenModal(false)}
                     >
-                        <div className="relative w-full max-w-md mx-4 bg-white rounded-lg shadow-2xl overflow-hidden"
+                        <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
                             onClick={(e) => e.stopPropagation()}>
-
-                            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                                <button className="text-gray-500 hover:text-gray-700 p-1" onClick={() => setOpenModal(false)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                                        <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-                                    </svg>
-                                </button>
-
-                                <h2 className="text-lg font-semibold text-gray-800">
-                                    Manage Booking
-                                </h2>
-
-                                <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">
-                                    Get Help
-                                </a>
+                            <div className="p-6 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-xl font-bold text-gray-900">Manage Booking</h2>
+                                    <button
+                                        onClick={() => setOpenModal(false)}
+                                        className="p-2 hover:bg-gray-100 rounded-lg transition"
+                                    >
+                                        <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p className="text-gray-600 mt-2">Choose an option to manage your booking</p>
                             </div>
 
                             <div className="divide-y divide-gray-100">
-                                <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-gray-800" onClick={handelReschudeleFun}>
-                                    <div className="flex items-center space-x-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" />
-                                        </svg>
-                                        <span className="text-base font-normal">Reschedule</span>
+                                <button
+                                    onClick={handelReschudeleFun}
+                                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                                            <MdCalendarToday className="text-blue-600 text-xl" />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-medium text-gray-900">Reschedule</p>
+                                            <p className="text-sm text-gray-600">Change date or time</p>
+                                        </div>
                                     </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-                                        <path d="m9 18 6-6-6-6" />
-                                    </svg>
-                                </div>
+                                    <IoIosArrowForward className="text-gray-400" />
+                                </button>
 
-                                <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-gray-800" onClick={() => { setOpenModal(false); setOpenInstructionsModal(true); }}>
-                                    <div className="flex items-center space-x-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                                            <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
-                                        </svg>
-                                        <span className="text-base font-normal">Add instructions</span>
+                                <button
+                                    onClick={() => { setOpenModal(false); setOpenInstructionsModal(true); }}
+                                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                                            <FiMessageCircle className="text-green-600 text-xl" />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-medium text-gray-900">Add Instructions</p>
+                                            <p className="text-sm text-gray-600">Special requirements</p>
+                                        </div>
                                     </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-                                        <path d="m9 18 6-6-6-6" />
-                                    </svg>
-                                </div>
+                                    <IoIosArrowForward className="text-gray-400" />
+                                </button>
 
-                                <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-gray-800" onClick={() => setModalAddressUpdate(true)}>
-                                    <div className="flex items-center space-x-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
-                                        </svg>
-                                        <span className="text-base font-normal">Change address</span>
+                                <button
+                                    onClick={() => setModalAddressUpdate(true)}
+                                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                                            <MdLocationOn className="text-purple-600 text-xl" />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-medium text-gray-900">Change Address</p>
+                                            <p className="text-sm text-gray-600">Update location</p>
+                                        </div>
                                     </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-                                        <path d="m9 18 6-6-6-6" />
-                                    </svg>
-                                </div>
+                                    <IoIosArrowForward className="text-gray-400" />
+                                </button>
 
-                                <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-gray-800" onClick={handleChangePaymentMethod}>
-                                    <div className="flex items-center space-x-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                                            <rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" />
-                                        </svg>
-                                        <span className="text-base font-normal">Change payment method</span>
+                                <button
+                                    onClick={handleChangePaymentMethod}
+                                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                                            <MdPayment className="text-amber-600 text-xl" />
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-medium text-gray-900">Payment Method</p>
+                                            <p className="text-sm text-gray-600">Update payment details</p>
+                                        </div>
                                     </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-                                        <path d="m9 18 6-6-6-6" />
-                                    </svg>
-                                </div>
+                                    <IoIosArrowForward className="text-gray-400" />
+                                </button>
 
-                                <div onClick={() => handleUserUpdateBookingStatus(item?.Data?.id)} className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-red-600">
-                                    <div className="flex items-center space-x-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                                            <circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" />
-                                        </svg>
-                                        <span className="text-base font-normal">Cancel</span>
+                                <button
+                                    onClick={() => handleUserUpdateBookingStatus(item?.Data?.id)}
+                                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-red-50 transition text-red-600"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
+                                            <svg className="text-red-600 text-xl" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="font-medium">Cancel Booking</p>
+                                            <p className="text-sm text-red-500">This action cannot be undone</p>
+                                        </div>
                                     </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-                                        <path d="m9 18 6-6-6-6" />
-                                    </svg>
-                                </div>
+                                    <IoIosArrowForward className="text-red-400" />
+                                </button>
+                            </div>
+
+                            <div className="p-6 border-t border-gray-200">
+                                <button
+                                    onClick={() => setOpenModal(false)}
+                                    className="w-full py-3 text-gray-600 hover:text-gray-800 font-medium"
+                                >
+                                    Close
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -655,57 +820,57 @@ export default function BookingDetails() {
 
                 {/* Add Instructions Modal */}
                 {openInstructionsModal &&
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
                         onClick={() => setOpenInstructionsModal(false)}
                     >
-                        <div className="relative w-full max-w-md mx-4 bg-white rounded-lg shadow-2xl overflow-hidden"
+                        <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden"
                             onClick={(e) => e.stopPropagation()}>
-
-                            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                                <button className="text-gray-500 hover:text-gray-700 p-1" onClick={() => setOpenInstructionsModal(false)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                                        <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-                                    </svg>
-                                </button>
-
-                                <h2 className="text-lg font-semibold text-gray-800">
-                                    Add Instructions
-                                </h2>
-
-                                <div className="w-6"></div>
+                            <div className="p-6 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-xl font-bold text-gray-900">Add Instructions</h2>
+                                    <button
+                                        onClick={() => setOpenInstructionsModal(false)}
+                                        className="p-2 hover:bg-gray-100 rounded-lg transition"
+                                    >
+                                        <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p className="text-gray-600 mt-2">Add special instructions for the service provider</p>
                             </div>
 
                             <div className="p-6">
-                                <div className="mb-4">
-                                    <label htmlFor="instructions" className="block text-sm font-medium text-gray-700 mb-2">
+                                <div className="mb-6">
+                                    <label className="block text-sm font-medium text-gray-700 mb-3">
                                         Additional Instructions
                                     </label>
                                     <textarea
-                                        id="instructions"
                                         rows="6"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder="Please provide any additional instructions for the service provider..."
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                                        placeholder="Please provide any additional instructions for the service provider (e.g., specific requirements, access codes, parking information, etc.)..."
                                         value={instructions}
                                         onChange={(e) => setInstructions(e.target.value)}
                                     />
-                                    <p className="mt-1 text-sm text-gray-500">
+                                    <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
                                         These instructions will be shared with your service provider.
-                                    </p>
+                                    </div>
                                 </div>
 
-                                <div className="flex justify-end space-x-3">
+                                <div className="flex justify-end gap-3">
                                     <button
-                                        type="button"
-                                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
                                         onClick={() => setOpenInstructionsModal(false)}
+                                        className="px-6 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition"
                                     >
                                         Cancel
                                     </button>
                                     <button
-                                        type="button"
-                                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition"
                                         onClick={handleAddInstructions}
                                         disabled={!instructions.trim()}
+                                        className="px-6 py-2.5 text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-xl font-medium transition"
                                     >
                                         Save Instructions
                                     </button>
@@ -716,14 +881,16 @@ export default function BookingDetails() {
                 }
 
                 {/* ADDRESS MODAL - View Current Address */}
+
+                {/* ADDRESS MODAL - View Current Address */}
                 {modalAddress &&
-                    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black/50"
+                    <div className="fixed inset-0 z-50 flex items-start justify-center pt-4 sm:pt-10 md:items-center md:pt-0 bg-black/50"
                         onClick={() => setModalAddress(false)}
                     >
-                        <div className="relative w-full max-w-[600px] mx-4 bg-white rounded-lg shadow-xl overflow-hidden h-[90vh] flex flex-col"
+                        <div className="relative w-full max-w-[600px] mx-4 bg-white rounded-lg shadow-xl h-[90vh] sm:h-[85vh] md:h-[80vh] flex flex-col"
                             onClick={(e) => e.stopPropagation()}>
 
-                            <div className="shrink-0 flex items-center justify-center p-5 border-b border-gray-200 relative">
+                            <div className="shrink-0 flex items-center justify-center p-4 sm:p-5 border-b border-gray-200 relative">
                                 <button className="absolute right-4 cursor-pointer text-gray-500 hover:text-gray-700 p-1.5"
                                     onClick={() => setModalAddress(false)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -731,143 +898,336 @@ export default function BookingDetails() {
                                     </svg>
                                 </button>
 
-                                <h2 className="text-lg font-semibold text-gray-800 tracking-tight">
-                                    Address
+                                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 tracking-tight">
+                                    Address Details
                                 </h2>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto px-6 py-5">
+                            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5">
                                 <div className="space-y-4 mb-6">
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">City</p>
-                                        <p className="text-base font-medium text-gray-900">
-                                            {addressParts.city || "Not specified"}
-                                        </p>
+                                    {/* Address Info Cards for Mobile */}
+                                    <div className="md:hidden space-y-3">
+                                        <div className="bg-gray-50 p-3 rounded-lg">
+                                            <p className="text-sm text-gray-600 mb-1">City</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.city || "Not specified"}
+                                            </p>
+                                        </div>
+                                        <div className="bg-gray-50 p-3 rounded-lg">
+                                            <p className="text-sm text-gray-600 mb-1">Area</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.area || "Not specified"}
+                                            </p>
+                                        </div>
+                                        <div className="bg-gray-50 p-3 rounded-lg">
+                                            <p className="text-sm text-gray-600 mb-1">Building Name</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.buildingName || "Not specified"}
+                                            </p>
+                                        </div>
+                                        <div className="bg-gray-50 p-3 rounded-lg">
+                                            <p className="text-sm text-gray-600 mb-1">Apartment No.</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.apartmentNo || "Not specified"}
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Type</p>
-                                        <p className="text-base font-medium text-gray-900">
-                                            {addressParts.type}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Area</p>
-                                        <p className="text-base font-medium text-gray-900">
-                                            {addressParts.area || "Not specified"}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Building Name</p>
-                                        <p className="text-base font-medium text-gray-900">
-                                            {addressParts.buildingName || "Not specified"}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Apartment No.</p>
-                                        <p className="text-base font-medium text-gray-900">
-                                            {addressParts.apartmentNo || "Not specified"}
-                                        </p>
+                                    {/* Address Info for Desktop */}
+                                    <div className="hidden md:grid md:grid-cols-2 md:gap-4">
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-base text-gray-700">City</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.city || "Not specified"}
+                                            </p>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-base text-gray-700">Type</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.type}
+                                            </p>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-base text-gray-700">Area</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.area || "Not specified"}
+                                            </p>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-base text-gray-700">Building Name</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.buildingName || "Not specified"}
+                                            </p>
+                                        </div>
+                                        <div className="flex justify-between p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-base text-gray-700">Apartment No.</p>
+                                            <p className="text-base font-medium text-gray-900">
+                                                {addressParts.apartmentNo || "Not specified"}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <div className="w-full h-64 rounded-lg overflow-hidden shrink-0">
-                                        <iframe
-                                            width="100%"
-                                            height="100%"
-                                            loading="lazy"
-                                            src={`https://www.google.com/maps?q=${mapLatitude},${mapLongitude}&z=16&output=embed`}
-                                            style={{ pointerEvents: "none" }}
-                                            title="Location Map"
-                                        ></iframe>
-                                    </div>
+                                {/* Map Section */}
+                                <div className="space-y-4 mb-6">
+                                    {/* Check if coordinates are available */}
+                                    {(() => {
+                                        // Get coordinates from useSummary or fallback to item data
+                                        const getCoordinates = () => {
+                                            // Try to get from useSummary first
+                                            let lat = mapLatitude;
+                                            let lng = mapLongitude;
+
+                                            // If not available from useSummary, try to get from item data
+                                            if (!lat || !lng || isNaN(parseFloat(lat)) || isNaN(parseFloat(lng))) {
+                                                // You might need to get coordinates from your item data
+                                                // Example: if your item has location data
+                                                // lat = item?.Data?.latitude;
+                                                // lng = item?.Data?.longitude;
+
+                                                // Default coordinates (for example, Dubai coordinates)
+                                                lat = "25.2048";
+                                                lng = "55.2708";
+                                            }
+
+                                            return {
+                                                lat: parseFloat(lat),
+                                                lng: parseFloat(lng)
+                                            };
+                                        };
+
+                                        const coordinates = getCoordinates();
+                                        const { lat, lng } = coordinates;
+                                        const isValidCoordinates = !isNaN(lat) && !isNaN(lng);
+
+                                        const googleMapsLink = isValidCoordinates
+                                            ? `https://www.google.com/maps?q=${lat},${lng}`
+                                            : "#";
+
+                                        const formatCoordinate = (coord) => {
+                                            if (isNaN(coord)) return "N/A";
+                                            return coord.toFixed(6);
+                                        };
+
+                                        return (
+                                            <>
+                                                <div className="w-full h-48 sm:h-64 md:h-72 rounded-lg overflow-hidden shrink-0 border border-gray-200">
+                                                    {isValidCoordinates ? (
+                                                        <iframe
+                                                            width="100%"
+                                                            height="100%"
+                                                            loading="lazy"
+                                                            src={`https://www.google.com/maps?q=${lat},${lng}&z=16&output=embed`}
+                                                            style={{ pointerEvents: "none" }}
+                                                            title="Location Map"
+                                                            className="rounded-lg"
+                                                        ></iframe>
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                                            <div className="text-center">
+                                                                <svg className="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                                                </svg>
+                                                                <p className="text-gray-600">Location map not available</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* Share and Action Buttons */}
+                                                <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                                                    {/* Share Button */}
+                                                    <button
+                                                        onClick={() => {
+                                                            if (!isValidCoordinates) {
+                                                                alert("Location coordinates are not available for sharing.");
+                                                                return;
+                                                            }
+
+                                                            // Try to copy to clipboard first
+                                                            if (navigator.clipboard && navigator.clipboard.writeText) {
+                                                                navigator.clipboard.writeText(googleMapsLink)
+                                                                    .then(() => {
+                                                                        // Show temporary success message
+                                                                        const btn = document.querySelector('#shareBtn');
+                                                                        if (btn) {
+                                                                            const originalText = btn.innerHTML;
+                                                                            btn.innerHTML = `
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                                                </svg>
+                                                                <span class="text-sm sm:text-base">Copied!</span>
+                                                            `;
+                                                                            btn.classList.add('bg-green-600', 'from-green-600', 'to-green-700');
+                                                                            btn.classList.remove('bg-blue-600', 'from-blue-600', 'to-blue-700');
+
+                                                                            setTimeout(() => {
+                                                                                btn.innerHTML = originalText;
+                                                                                btn.classList.remove('bg-green-600', 'from-green-600', 'to-green-700');
+                                                                                btn.classList.add('bg-blue-600', 'from-blue-600', 'to-blue-700');
+                                                                            }, 2000);
+                                                                        }
+                                                                    })
+                                                                    .catch(err => {
+                                                                        console.error('Failed to copy: ', err);
+                                                                        // Fallback: open link in new tab
+                                                                        window.open(googleMapsLink, '_blank');
+                                                                    });
+                                                            } else {
+                                                                // Fallback for browsers that don't support clipboard API
+                                                                window.open(googleMapsLink, '_blank');
+                                                            }
+                                                        }}
+                                                        id="shareBtn"
+                                                        disabled={!isValidCoordinates}
+                                                        className={`flex-1 flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-medium rounded-lg shadow-md transition-all duration-200 ${isValidCoordinates
+                                                            ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white hover:shadow-lg'
+                                                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <path d="M21.5 12H16c-.7 2-2 3-4 3s-3.3-1-4-3H2.5" />
+                                                            <path d="M5.5 5.1C6.6 3.6 8.5 3 10 3c2.8 0 5 2.2 5 5v12c0 1.7-1.3 3-3 3s-3-1.3-3-3v-3" />
+                                                            <path d="M8 3v3" />
+                                                            <path d="M14 3v3" />
+                                                            <path d="M17 10h5" />
+                                                        </svg>
+                                                        <span className="text-sm sm:text-base whitespace-nowrap">
+                                                            {isValidCoordinates ? "Share Location" : "Location Unavailable"}
+                                                        </span>
+                                                    </button>
+
+                                                    {/* Open in Google Maps Button */}
+                                                    <button
+                                                        onClick={() => {
+                                                            if (!isValidCoordinates) {
+                                                                alert("Location coordinates are not available.");
+                                                                return;
+                                                            }
+                                                            window.open(googleMapsLink, '_blank', 'noopener,noreferrer');
+                                                        }}
+                                                        disabled={!isValidCoordinates}
+                                                        className={`flex-1 flex items-center justify-center gap-2 px-4 sm:px-6 py-3 font-medium rounded-lg shadow-md transition-all duration-200 ${isValidCoordinates
+                                                            ? 'bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white hover:shadow-lg'
+                                                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                            <circle cx="12" cy="10" r="3"></circle>
+                                                        </svg>
+                                                        <span className="text-sm sm:text-base whitespace-nowrap">
+                                                            {isValidCoordinates ? "Open in Maps" : "Maps Unavailable"}
+                                                        </span>
+                                                    </button>
+                                                </div>
+
+                                                {/* Coordinates Info */}
+                                                <div className="bg-gray-50 p-3 rounded-lg mt-2">
+                                                    <div className="flex items-center justify-between text-sm">
+                                                        <div className="flex items-center gap-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                <circle cx="12" cy="12" r="10"></circle>
+                                                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                                            </svg>
+                                                            <span className="text-gray-600">Coordinates:</span>
+                                                        </div>
+                                                        <code className="font-mono text-xs sm:text-sm text-gray-800">
+                                                            {isValidCoordinates
+                                                                ? `${formatCoordinate(lat)}, ${formatCoordinate(lng)}`
+                                                                : "Coordinates not available"}
+                                                        </code>
+                                                    </div>
+                                                    <p className="text-xs text-gray-500 mt-1 text-center">
+                                                        {isValidCoordinates
+                                                            ? "Click share button to copy Google Maps link"
+                                                            : "Location coordinates are not available"}
+                                                    </p>
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             </div>
                         </div>
                     </div>
                 }
+
 
                 {/* PRICE MODAL */}
                 {modalPrice &&
-                    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black/50"
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
                         onClick={() => setModalPrice(false)}
                     >
-                        <div className="relative w-full max-w-[600px] mx-4 bg-white rounded-lg shadow-xl overflow-hidden h-[90vh] flex flex-col"
+                        <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
                             onClick={(e) => e.stopPropagation()}>
-
-                            <div className="shrink-0 flex items-center justify-center p-5 border-b border-gray-200 relative">
-                                <button className="absolute right-4 cursor-pointer text-gray-500 hover:text-gray-700 p-1.5"
-                                    onClick={() => setModalPrice(false)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-                                    </svg>
-                                </button>
-
-                                <h2 className="text-lg font-semibold text-gray-800 tracking-tight">
-                                    Total to pay
-                                </h2>
+                            <div className="p-6 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-xl font-bold text-gray-900">Payment Breakdown</h2>
+                                    <button
+                                        onClick={() => setModalPrice(false)}
+                                        className="p-2 hover:bg-gray-100 rounded-lg transition"
+                                    >
+                                        <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p className="text-gray-600 mt-2">Detailed breakdown of all charges</p>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto px-6 py-5">
-                                <div className="space-y-4 mb-6">
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Service Charges</p>
-                                        <p className="text-xl font-medium text-gray-900 flex items-center gap-1">
-                                            <img src={dirhum} alt="" className="h-5 w-5" />
-                                            {serviceCharge}
-                                        </p>
+                            <div className="flex-1 overflow-y-auto p-6">
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                                        <span className="font-medium text-gray-700">Service Charges</span>
+                                        <div className="flex items-center gap-2">
+                                            <img src={dirhum} alt="Currency" className="w-5 h-5" />
+                                            <span className="text-lg font-semibold text-gray-900">{serviceCharge}</span>
+                                        </div>
                                     </div>
-
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Cash on Delivery Charges</p>
-                                        <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-                                            <img src={dirhum} alt="" className="h-5 w-5" />
-                                            60
-                                        </p>
+                                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                                        <span className="font-medium text-gray-700">Cash on Delivery Charges</span>
+                                        <div className="flex items-center gap-2">
+                                            <img src={dirhum} alt="Currency" className="w-5 h-5" />
+                                            <span className="text-lg font-semibold text-gray-900">60</span>
+                                        </div>
                                     </div>
-
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Service Fee</p>
-                                        <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-                                            <img src={dirhum} alt="" className="h-5 w-5" />
-                                            {serviceFee}
-                                        </p>
+                                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                                        <span className="font-medium text-gray-700">Service Fee</span>
+                                        <div className="flex items-center gap-2">
+                                            <img src={dirhum} alt="Currency" className="w-5 h-5" />
+                                            <span className="text-lg font-semibold text-gray-900">{serviceFee}</span>
+                                        </div>
                                     </div>
-
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Discount</p>
-                                        <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-                                            <img src={dirhum} alt="" className="h-5 w-5" />
-                                            60
-                                        </p>
+                                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                                        <span className="font-medium text-gray-700">Discount</span>
+                                        <div className="flex items-center gap-2">
+                                            <img src={dirhum} alt="Currency" className="w-5 h-5" />
+                                            <span className="text-lg font-semibold text-gray-900">60</span>
+                                        </div>
                                     </div>
-
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">Sub Total</p>
-                                        <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-                                            <img src={dirhum} alt="" className="h-5 w-5" />
-                                            {subTotal}
-                                        </p>
+                                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                                        <span className="font-medium text-gray-700">Sub Total</span>
+                                        <div className="flex items-center gap-2">
+                                            <img src={dirhum} alt="Currency" className="w-5 h-5" />
+                                            <span className="text-lg font-semibold text-gray-900">{subTotal}</span>
+                                        </div>
                                     </div>
-
-                                    <div className="flex justify-between">
-                                        <p className="text-base text-gray-700">VAT (5%)</p>
-                                        <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-                                            <img src={dirhum} alt="" className="h-5 w-5" />
-                                            {vat}
-                                        </p>
+                                    <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                                        <span className="font-medium text-gray-700">VAT (5%)</span>
+                                        <div className="flex items-center gap-2">
+                                            <img src={dirhum} alt="Currency" className="w-5 h-5" />
+                                            <span className="text-lg font-semibold text-gray-900">{vat}</span>
+                                        </div>
                                     </div>
-
-                                    <div className="flex justify-between border-t pt-4 border-e-gray-200">
-                                        <p className="text-base text-gray-700">Total to pay</p>
-                                        <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-                                            <img src={dirhum} alt="" className="h-5 w-5" />
-                                            {total}
-                                        </p>
+                                    <div className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200 mt-6">
+                                        <div>
+                                            <span className="font-semibold text-gray-900 text-lg">Total to Pay</span>
+                                            <p className="text-sm text-gray-600">Final amount including all taxes</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <img src={dirhum} alt="Currency" className="w-6 h-6" />
+                                            <span className="text-2xl font-bold text-gray-900">{total}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -875,130 +1235,170 @@ export default function BookingDetails() {
                     </div>
                 }
 
-                {/* RESCHEDULE MODAL - আগের design ই রাখা হয়েছে */}
+                {/* RESCHEDULE MODAL */}
                 {modalRescudle &&
-                    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black/50"
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
                         onClick={() => setModalRescudle(false)}
                     >
-                        <div className="relative w-full max-w-[600px] mx-4 bg-white rounded-lg shadow-xl 
-                            h-[80vh] flex flex-col overflow-hidden"
+                        <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
                             onClick={(e) => e.stopPropagation()}>
-                            <div className="flex items-center justify-between py-3 md:py-6 px-6 border-b">
-                                <div onClick={() => setModalRescudle(false)} className="">
-                                    <LuArrowLeft />
-                                </div>
-                                <p className="text-xl font-medium">Reschedule</p>
-                                <p></p>
-                            </div>
-                            <div className="flex-1 overflow-y-auto">
-                                <div className="p-6 bg-white rounded-lg shadow-sm">
-
-                                    {/* Day Selector */}
-                                    <h3 className="text-lg font-semibold mb-4">
-                                        Which day would you like us to come?
-                                    </h3>
-                                    {isLoading && <p>Loading...</p>}
-                                    {availableDays.length === 0 ? (
-                                        <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-                                            <svg className="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
-                                            <p className="text-gray-600 font-medium">No available dates</p>
-                                            <p className="text-sm text-gray-500 mt-1">Please check back later for available slots</p>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <div className="relative max-w-[300px] mx-auto md:max-w-4xl">
-                                                {/* Left Scroll Button */}
-                                                <button
-                                                    onClick={() => scroll("left")}
-                                                    className="hidden absolute -left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 md:flex items-center justify-center"
-                                                >
-                                                    <IoIosArrowBack className="text-3xl font-bold" />
-                                                </button>
-
-                                                {/* Day List */}
-                                                <div
-                                                    ref={scrollerRef}
-                                                    className="flex gap-3 overflow-x-auto no-scrollbar py-2 px-10"
-                                                >
-                                                    {availableDays.map((day, index) => {
-                                                        const isActive = selectedDay === day.date;
-
-                                                        return (
-                                                            <div
-                                                                key={`${day.date}-${index}`}
-                                                                onClick={() => setSelectedDay(day.date)}
-                                                                className={`snap-start min-w-[100px] md:min-w-[85px] px-2 py-1 rounded-lg border cursor-pointer flex flex-col items-center gap-1 transition
-                                                                                   ${isActive ? "bg-[#B2D7DE] border-transparent shadow" : "bg-white border-gray-200 hover:bg-gray-50"}
-                                                                               `}
-                                                            >
-                                                                <div className="text-sm text-gray-600">{day.short}</div>
-                                                                <div className="text-sm font-medium">{day.label}</div>
-                                                                {day.timeSlots && day.timeSlots.length > 0 && (
-                                                                    <div className="text-xs text-green-600 mt-1">
-                                                                        {day.timeSlots.length} slot{day.timeSlots.length !== 1 ? 's' : ''}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-
-                                                {/* Right Scroll Button */}
-                                                <button
-                                                    onClick={() => scroll("right")}
-                                                    className="hidden absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 md:flex items-center justify-center cursor-pointer"
-                                                >
-                                                    <IoIosArrowForward className="text-3xl font-bold" />
-                                                </button>
-                                            </div>
-
-                                            {/* Time Selector */}
-                                            {selectedDay && (
-                                                <>
-                                                    <h3 className="text-lg font-semibold mt-8 mb-4">
-                                                        What time would you like us to arrive?
-                                                    </h3>
-
-                                                    {availableTimes.length === 0 ? (
-                                                        <div className="text-center py-6 border-2 border-dashed border-gray-300 rounded-lg">
-                                                            <svg className="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                            </svg>
-                                                            <p className="text-gray-600">No time slots available for this date</p>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                            {availableTimes.map((timeSlot, index) => (
-                                                                <button
-                                                                    key={index}
-                                                                    onClick={() => setSelectedTime(timeSlot)}
-                                                                    className={`w-full text-left rounded-lg border px-6 py-4 transition
-                                                                                       ${selectedTime === timeSlot ? "bg-[#E6F6F6] border-teal-300 shadow-sm" : "bg-white border-gray-200 hover:bg-gray-50"}
-                                                                                   `}
-                                                                >
-                                                                    <span className="text-sm font-medium">{timeSlot}</span>
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
-                                        </>
-                                    )}
-
-                                    {/* Note */}
-                                    <div className="mt-8 p-4 bg-gray-50 border rounded-md flex gap-4 text-sm text-gray-700">
-                                        <svg className="w-5 h-5 text-gray-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <path d="M12 9v2m0 4h.01M21 12A9 9 0 1112 3a9 9 0 019 9z" strokeWidth="1.5" />
-                                        </svg>
-
+                            <div className="p-6 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => setModalRescudle(false)}
+                                            className="p-2 hover:bg-gray-100 rounded-lg transition"
+                                        >
+                                            <LuArrowLeft className="text-xl" />
+                                        </button>
                                         <div>
-                                            We can not guarantee the availability of the selected or preferred technician once the date/time of service is changed or any other changes are requested.
+                                            <h2 className="text-xl font-bold text-gray-900">Reschedule Booking</h2>
+                                            <p className="text-gray-600">Select a new date and time for your service</p>
                                         </div>
                                     </div>
-                                    <button onClick={() => handleRescheduleSubmit(item.Data.id)} className="w-full bg-[#ED6329] py-3 text-white font-medium mt-2.5 rounded-sm">Confirm</button>
+                                </div>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-6">
+                                <div className="space-y-8">
+                                    {/* Day Selector */}
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                            <MdCalendarToday className="text-blue-600" />
+                                            Select Date
+                                        </h3>
+                                        {isLoading && (
+                                            <div className="text-center py-12">
+                                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                                                <p className="mt-4 text-gray-600">Loading available dates...</p>
+                                            </div>
+                                        )}
+                                        {availableDays.length === 0 && !isLoading ? (
+                                            <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-xl">
+                                                <svg className="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                <p className="text-gray-700 font-medium">No available dates</p>
+                                                <p className="text-sm text-gray-500 mt-1">Please check back later for available slots</p>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div className="relative">
+                                                    <button
+                                                        onClick={() => scroll("left")}
+                                                        className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 bg-white border border-gray-200 rounded-full shadow-md hover:shadow-lg flex items-center justify-center"
+                                                    >
+                                                        <IoIosArrowBack className="text-xl" />
+                                                    </button>
+
+                                                    <div
+                                                        ref={scrollerRef}
+                                                        className="flex gap-3 overflow-x-auto pb-4 px-10 scrollbar-hide"
+                                                    >
+                                                        {availableDays.map((day, index) => {
+                                                            const isActive = selectedDay === day.date;
+                                                            return (
+                                                                <button
+                                                                    key={`${day.date}-${index}`}
+                                                                    onClick={() => setSelectedDay(day.date)}
+                                                                    className={`min-w-[120px] px-4 py-4 rounded-xl border flex flex-col items-center gap-1 transition-all duration-200 ${isActive
+                                                                        ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white border-transparent shadow-lg"
+                                                                        : "bg-white border-gray-200 hover:bg-gray-50 hover:shadow-md"
+                                                                        }`}
+                                                                >
+                                                                    <div className={`text-sm ${isActive ? "text-blue-100" : "text-gray-600"}`}>
+                                                                        {day.short}
+                                                                    </div>
+                                                                    <div className={`font-semibold ${isActive ? "text-white" : "text-gray-900"}`}>
+                                                                        {day.label}
+                                                                    </div>
+                                                                    {day.timeSlots && day.timeSlots.length > 0 && (
+                                                                        <div className={`text-xs mt-1 ${isActive ? "text-blue-100" : "text-green-600"}`}>
+                                                                            {day.timeSlots.length} slot{day.timeSlots.length !== 1 ? 's' : ''}
+                                                                        </div>
+                                                                    )}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+
+                                                    <button
+                                                        onClick={() => scroll("right")}
+                                                        className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 bg-white border border-gray-200 rounded-full shadow-md hover:shadow-lg flex items-center justify-center"
+                                                    >
+                                                        <IoIosArrowForward className="text-xl" />
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    {/* Time Selector */}
+                                    {selectedDay && (
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                                <BsClock className="text-blue-600" />
+                                                Select Time Slot
+                                            </h3>
+
+                                            {availableTimes.length === 0 ? (
+                                                <div className="text-center py-6 border-2 border-dashed border-gray-300 rounded-xl">
+                                                    <svg className="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <p className="text-gray-700">No time slots available for this date</p>
+                                                    <p className="text-sm text-gray-500">Please select another date</p>
+                                                </div>
+                                            ) : (
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    {availableTimes.map((timeSlot, index) => (
+                                                        <button
+                                                            key={index}
+                                                            onClick={() => setSelectedTime(timeSlot)}
+                                                            className={`p-4 rounded-xl border transition-all duration-200 text-center ${selectedTime === timeSlot
+                                                                ? "bg-gradient-to-br from-green-500 to-green-600 text-white border-transparent shadow-lg"
+                                                                : "bg-white border-gray-200 hover:bg-gray-50 hover:shadow-md"
+                                                                }`}
+                                                        >
+                                                            <span className="font-medium">{timeSlot}</span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Note Section */}
+                                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                                        <div className="flex gap-3">
+                                            <div className="flex-shrink-0">
+                                                <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-medium text-amber-900 mb-1">Important Note</h4>
+                                                <p className="text-sm text-amber-800">
+                                                    We cannot guarantee the availability of the selected or preferred technician once the date/time of service is changed or any other changes are requested.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Confirm Button */}
+                                    <div className="sticky bottom-0 bg-white pt-4 border-t">
+                                        <button
+                                            onClick={() => handleRescheduleSubmit(item.Data.id)}
+                                            disabled={!selectedDay || !selectedTime}
+                                            className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition shadow-lg hover:shadow-xl"
+                                        >
+                                            {selectedDay && selectedTime ? (
+                                                `Reschedule to ${selectedDay} at ${selectedTime}`
+                                            ) : (
+                                                "Select date and time to continue"
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1007,77 +1407,119 @@ export default function BookingDetails() {
 
                 {/* PAYMENT METHOD CHANGE MODAL */}
                 {modalPaymentMethod &&
-                    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black/50"
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
                         onClick={() => setModalPaymentMethod(false)}
                     >
-                        <div className="relative w-full max-w-[500px] mx-4 bg-white rounded-lg shadow-xl overflow-hidden h-[80vh] flex flex-col"
+                        <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
                             onClick={(e) => e.stopPropagation()}>
-
-                            <div className="flex items-center justify-between py-4 px-6 border-b">
-                                <div onClick={() => setModalPaymentMethod(false)} className="cursor-pointer">
-                                    <LuArrowLeft />
+                            <div className="p-6 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => setModalPaymentMethod(false)}
+                                            className="p-2 hover:bg-gray-100 rounded-lg transition"
+                                        >
+                                            <LuArrowLeft className="text-xl" />
+                                        </button>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-gray-900">Update Payment Method</h2>
+                                            <p className="text-gray-600">Select your preferred payment method</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p className="text-xl font-medium">Change Payment Method</p>
-                                <div className="w-6"></div>
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-6">
-                                <div className="mb-6">
-                                    <h3 className="text-lg font-semibold mb-4">Select Payment Method</h3>
-                                    <p className="text-gray-600 mb-6">Current method: <span className="font-medium">{item?.Data?.paymentMethod || "Not specified"}</span></p>
+                                <div className="space-y-6">
+                                    <div className="bg-blue-50 rounded-xl p-4 mb-6">
+                                        <p className="text-gray-700">
+                                            Current method: <span className="font-semibold text-gray-900">{item?.Data?.paymentMethod || "Not specified"}</span>
+                                        </p>
+                                    </div>
 
                                     {/* Payment Method Options */}
-                                    <div className="space-y-4">
+                                    <div className="space-y-3">
                                         {["Cash", "Credit Card", "Debit Card", "Online Payment", "Wallet"].map((method) => (
                                             <div
                                                 key={method}
                                                 onClick={() => setSelectedPaymentMethod(method)}
-                                                className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all duration-200 ${selectedPaymentMethod === method
-                                                    ? "bg-blue-50 border-blue-300 shadow-sm"
-                                                    : "bg-white border-gray-200 hover:bg-gray-50"
+                                                className={`p-4 border rounded-xl cursor-pointer transition-all duration-200 ${selectedPaymentMethod === method
+                                                    ? "bg-gradient-to-r from-blue-50 to-blue-100 border-blue-300 shadow-md"
+                                                    : "bg-white border-gray-200 hover:bg-gray-50 hover:shadow-sm"
                                                     }`}
                                             >
-                                                <div className="flex items-center">
-                                                    <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${selectedPaymentMethod === method
-                                                        ? "border-blue-500 bg-blue-500"
-                                                        : "border-gray-300"
-                                                        }`}>
-                                                        {selectedPaymentMethod === method && (
-                                                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedPaymentMethod === method
+                                                            ? "border-blue-600 bg-blue-600"
+                                                            : "border-gray-300"
+                                                            }`}>
+                                                            {selectedPaymentMethod === method && (
+                                                                <div className="w-2 h-2 rounded-full bg-white"></div>
+                                                            )}
+                                                        </div>
+                                                        <div>
+                                                            <span className="font-semibold text-gray-900">{method}</span>
+                                                            <p className="text-sm text-gray-600 mt-1">
+                                                                {method === "Cash" && "Pay with cash on delivery"}
+                                                                {method === "Credit Card" && "Pay with your credit card"}
+                                                                {method === "Debit Card" && "Pay with your debit card"}
+                                                                {method === "Online Payment" && "Pay online via secure payment gateway"}
+                                                                {method === "Wallet" && "Pay using your digital wallet"}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-gray-400">
+                                                        {method === "Credit Card" && (
+                                                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                                            </svg>
+                                                        )}
+                                                        {method === "Cash" && (
+                                                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                            </svg>
+                                                        )}
+                                                        {method === "Online Payment" && (
+                                                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                                            </svg>
+                                                        )}
+                                                        {method === "Wallet" && (
+                                                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                                                            </svg>
                                                         )}
                                                     </div>
-                                                    <span className="font-medium">{method}</span>
                                                 </div>
-
-                                                {/* Payment Method Icons */}
-                                                {method === "Credit Card" && (
-                                                    <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                                    </svg>
-                                                )}
-                                                {method === "Cash" && (
-                                                    <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                                                    </svg>
-                                                )}
-                                                {method === "Online Payment" && (
-                                                    <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                                    </svg>
-                                                )}
                                             </div>
                                         ))}
                                     </div>
 
-                                    {/* Note */}
-                                    <div className="mt-8 p-4 bg-yellow-50 border border-yellow-100 rounded-lg">
+                                    {/* Important Note */}
+                                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5">
                                         <div className="flex gap-3">
-                                            <svg className="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                <path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeWidth="1.5" />
-                                            </svg>
-                                            <div className="text-sm text-yellow-700">
-                                                <p className="font-medium mb-1">Note:</p>
-                                                <p>Changing payment method may affect the total amount due. Some payment methods may have additional fees.</p>
+                                            <div className="flex-shrink-0">
+                                                <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-semibold text-amber-900 mb-2">Important Information</h4>
+                                                <ul className="text-sm text-amber-800 space-y-2">
+                                                    <li className="flex items-start gap-2">
+                                                        <span className="text-amber-600">•</span>
+                                                        Changing payment method may affect the total amount due
+                                                    </li>
+                                                    <li className="flex items-start gap-2">
+                                                        <span className="text-amber-600">•</span>
+                                                        Some payment methods may have additional processing fees
+                                                    </li>
+                                                    <li className="flex items-start gap-2">
+                                                        <span className="text-amber-600">•</span>
+                                                        Online payments are processed securely
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -1090,7 +1532,7 @@ export default function BookingDetails() {
                                     <button
                                         type="button"
                                         onClick={() => setModalPaymentMethod(false)}
-                                        className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition"
+                                        className="flex-1 px-6 py-3.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-semibold transition"
                                         disabled={isUpdatingPayment}
                                     >
                                         Cancel
@@ -1098,16 +1540,13 @@ export default function BookingDetails() {
                                     <button
                                         type="button"
                                         onClick={handlePaymentMethodUpdate}
-                                        className="flex-1 px-4 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex-1 px-6 py-3.5 text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
                                         disabled={isUpdatingPayment}
                                     >
                                         {isUpdatingPayment ? (
                                             <span className="flex items-center justify-center">
-                                                <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                </svg>
-                                                Updating...
+                                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                                                Updating Payment Method...
                                             </span>
                                         ) : "Update Payment Method"}
                                     </button>
@@ -1119,169 +1558,206 @@ export default function BookingDetails() {
 
                 {/* ADDRESS UPDATE MODAL */}
                 {modalAddressUpdate &&
-                    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black/50"
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm"
                         onClick={() => setModalAddressUpdate(false)}
                     >
-                        <div className="relative w-full max-w-[600px] mx-4 bg-white rounded-lg shadow-xl h-[80vh] flex flex-col overflow-hidden"
+                        <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
                             onClick={(e) => e.stopPropagation()}>
-                            <div className="flex items-center justify-between py-3 md:py-6 px-6 border-b">
-                                <div onClick={() => setModalAddressUpdate(false)} className="cursor-pointer">
-                                    <LuArrowLeft />
+                            <div className="p-6 border-b border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => setModalAddressUpdate(false)}
+                                            className="p-2 hover:bg-gray-100 rounded-lg transition"
+                                        >
+                                            <LuArrowLeft className="text-xl" />
+                                        </button>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-gray-900">Update Address</h2>
+                                            <p className="text-gray-600">Update your service location details</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p className="text-xl font-medium">Update Address</p>
-                                <p></p>
                             </div>
-                            <div className="flex-1 overflow-y-auto p-4">
-                                <div className="bg-white rounded-xl shadow-lg w-full p-6">
-                                    {/* TYPE BUTTONS */}
-                                    <div className="flex flex-wrap gap-2 mb-6">
-                                        {buttons.map(btn => (
-                                            <button
-                                                key={btn}
-                                                onClick={() => handleTypeChange(btn)}
-                                                type="button"
-                                                className={`flex items-center px-4 py-2 rounded-full transition duration-300 border cursor-pointer
-                                                    ${selectedType === btn ? "bg-teal-600 text-white shadow-md" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"}`}
-                                            >
-                                                {btn}
-                                            </button>
-                                        ))}
+
+                            <div className="flex-1 overflow-y-auto p-6">
+                                <div className="space-y-6">
+                                    {/* Property Type Selection */}
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Type</h3>
+                                        <div className="flex flex-wrap gap-3">
+                                            {propertyTypes.map((type) => (
+                                                <button
+                                                    key={type}
+                                                    onClick={() => handleTypeChange(type)}
+                                                    type="button"
+                                                    className={`px-5 py-3 rounded-xl border transition-all duration-200 ${selectedType === type
+                                                        ? "bg-gradient-to-r from-teal-600 to-teal-700 text-white border-transparent shadow-lg"
+                                                        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:shadow-md"
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        {type === "Apartment" && <HiBuildingOffice className="text-lg" />}
+                                                        {type === "Villa" && <HiHome className="text-lg" />}
+                                                        {type === "Office" && <HiBuildingOffice className="text-lg" />}
+                                                        {type === "Other" && <MdLocationOn className="text-lg" />}
+                                                        <span className="font-medium">{type}</span>
+                                                    </div>
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
 
-                                    {/* FORM */}
+                                    {/* Form */}
                                     <form onSubmit={handleSubmit(handleAddressUpdate)} className="space-y-6">
-                                        {/* City */}
-                                        <div>
-                                            <label className="block text-gray-700 font-medium mb-1">City *</label>
-                                            <input
-                                                {...register("city", { required: "City is required" })}
-                                                type="text"
-                                                placeholder="Enter City"
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                                            />
-                                            {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>}
+                                        {/* Common Fields */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                    City *
+                                                </label>
+                                                <input
+                                                    {...register("city", { required: "City is required" })}
+                                                    type="text"
+                                                    placeholder="Enter City"
+                                                    className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-gray-900"
+                                                />
+                                                {errors.city && <p className="text-red-600 text-sm mt-2">{errors.city.message}</p>}
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                    Area *
+                                                </label>
+                                                <input
+                                                    {...register("area", { required: "Area is required" })}
+                                                    type="text"
+                                                    placeholder="Enter Area"
+                                                    className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-gray-900"
+                                                />
+                                                {errors.area && <p className="text-red-600 text-sm mt-2">{errors.area.message}</p>}
+                                            </div>
                                         </div>
 
-                                        {/* Area */}
-                                        <div>
-                                            <label className="block text-gray-700 font-medium mb-1">Area *</label>
-                                            <input
-                                                {...register("area", { required: "Area is required" })}
-                                                type="text"
-                                                placeholder="Enter Area"
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                                            />
-                                            {errors.area && <p className="text-red-500 text-sm mt-1">{errors.area.message}</p>}
-                                        </div>
-
-                                        {/* Dynamic Fields */}
+                                        {/* Dynamic Fields based on Property Type */}
                                         {selectedType === "Villa" && (
-                                            <>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
-                                                    <label className="block text-gray-700 font-medium mb-1">Community / Street Name *</label>
+                                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                        Community / Street Name *
+                                                    </label>
                                                     <input
                                                         {...register("community", { required: "Community is required" })}
                                                         type="text"
                                                         placeholder="Enter Community / Street Name"
-                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                        className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                                     />
-                                                    {errors.community && <p className="text-red-500 text-sm mt-1">{errors.community.message}</p>}
+                                                    {errors.community && <p className="text-red-600 text-sm mt-2">{errors.community.message}</p>}
                                                 </div>
                                                 <div>
-                                                    <label className="block text-gray-700 font-medium mb-1">Villa No *</label>
+                                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                        Villa No *
+                                                    </label>
                                                     <input
                                                         {...register("villaNo", { required: "Villa number is required" })}
                                                         type="text"
                                                         placeholder="Enter Villa Number"
-                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                        className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                                     />
-                                                    {errors.villaNo && <p className="text-red-500 text-sm mt-1">{errors.villaNo.message}</p>}
+                                                    {errors.villaNo && <p className="text-red-600 text-sm mt-2">{errors.villaNo.message}</p>}
                                                 </div>
-                                            </>
+                                            </div>
                                         )}
 
                                         {selectedType === "Other" && (
-                                            <>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
-                                                    <label className="block text-gray-700 font-medium mb-1">Nickname *</label>
+                                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                        Nickname *
+                                                    </label>
                                                     <input
                                                         {...register("nickname", { required: "Nickname is required" })}
                                                         type="text"
                                                         placeholder="Enter Nickname"
-                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                        className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                                     />
-                                                    {errors.nickname && <p className="text-red-500 text-sm mt-1">{errors.nickname.message}</p>}
+                                                    {errors.nickname && <p className="text-red-600 text-sm mt-2">{errors.nickname.message}</p>}
                                                 </div>
                                                 <div>
-                                                    <label className="block text-gray-700 font-medium mb-1">Street / Building Name *</label>
+                                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                        Street / Building Name *
+                                                    </label>
                                                     <input
                                                         {...register("streetName", { required: "Street/Building name is required" })}
                                                         type="text"
                                                         placeholder="Enter Street / Building Name"
-                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                        className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                                     />
-                                                    {errors.streetName && <p className="text-red-500 text-sm mt-1">{errors.streetName.message}</p>}
+                                                    {errors.streetName && <p className="text-red-600 text-sm mt-2">{errors.streetName.message}</p>}
                                                 </div>
                                                 <div>
-                                                    <label className="block text-gray-700 font-medium mb-1">Apartment / Villa No *</label>
+                                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                        Apartment / Villa No *
+                                                    </label>
                                                     <input
                                                         {...register("otherNo", { required: "Apartment/Villa number is required" })}
                                                         type="text"
                                                         placeholder="Enter Apartment / Villa No"
-                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                        className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                                     />
-                                                    {errors.otherNo && <p className="text-red-500 text-sm mt-1">{errors.otherNo.message}</p>}
+                                                    {errors.otherNo && <p className="text-red-600 text-sm mt-2">{errors.otherNo.message}</p>}
                                                 </div>
-                                            </>
+                                            </div>
                                         )}
 
                                         {selectedType !== "Villa" && selectedType !== "Other" && (
-                                            <>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
-                                                    <label className="block text-gray-700 font-medium mb-1">Building Name *</label>
+                                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                        Building Name *
+                                                    </label>
                                                     <input
                                                         {...register("buildingName", { required: "Building name is required" })}
                                                         type="text"
                                                         placeholder="Enter Building Name"
-                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                        className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                                     />
-                                                    {errors.buildingName && <p className="text-red-500 text-sm mt-1">{errors.buildingName.message}</p>}
+                                                    {errors.buildingName && <p className="text-red-600 text-sm mt-2">{errors.buildingName.message}</p>}
                                                 </div>
                                                 <div>
-                                                    <label className="block text-gray-700 font-medium mb-1">Apartment No *</label>
+                                                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                                                        Apartment No *
+                                                    </label>
                                                     <input
                                                         {...register("apartmentNo", { required: "Apartment number is required" })}
                                                         type="text"
                                                         placeholder="Enter Apartment No"
-                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                        className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                                     />
-                                                    {errors.apartmentNo && <p className="text-red-500 text-sm mt-1">{errors.apartmentNo.message}</p>}
+                                                    {errors.apartmentNo && <p className="text-red-600 text-sm mt-2">{errors.apartmentNo.message}</p>}
                                                 </div>
-                                            </>
+                                            </div>
                                         )}
 
                                         {/* Submit Buttons */}
-                                        <div className="flex gap-3 pt-6 border-t">
+                                        <div className="flex gap-4 pt-6 border-t">
                                             <button
                                                 type="button"
                                                 onClick={() => setModalAddressUpdate(false)}
-                                                className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition"
+                                                className="flex-1 px-6 py-3.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-semibold transition"
                                                 disabled={isUpdatingAddress}
                                             >
                                                 Cancel
                                             </button>
                                             <button
                                                 type="submit"
-                                                className="flex-1 px-4 py-3 text-white bg-teal-600 hover:bg-teal-700 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="flex-1 px-6 py-3.5 text-white bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
                                                 disabled={isUpdatingAddress}
                                             >
                                                 {isUpdatingAddress ? (
                                                     <span className="flex items-center justify-center">
-                                                        <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                        </svg>
-                                                        Updating...
+                                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                                                        Updating Address...
                                                     </span>
                                                 ) : "Update Address"}
                                             </button>
@@ -1296,483 +1772,3 @@ export default function BookingDetails() {
         </div>
     );
 };
-
-
-
-
-
-
-
-
-// common modal section
-// <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black/50"
-//     onClick={() => setModalAddressUpdate(false)}
-// >
-//     <div className="relative w-full max-w-[600px] mx-4 bg-white rounded-lg shadow-xl
-//                             h-[80vh] flex flex-col overflow-hidden"
-//         onClick={(e) => e.stopPropagation()}>
-//         <div className="flex items-center justify-between py-3 md:py-6 px-6 border-b">
-//             <div onClick={() => setModalAddressUpdate(false)} className="">
-//                 <LuArrowLeft />
-//             </div>
-//             <p className="text-xl font-medium">Address Change</p>
-//             <p></p>
-//         </div>
-//         <div className="flex-1 overflow-y-auto">
-
-
-//         </div>
-//     </div>
-// </div>
-
-
-
-
-
-
-
-
-
-// import { useState } from "react";
-// import { FaUser } from "react-icons/fa";
-// import { FiMessageCircle } from "react-icons/fi";
-// import { FiPhone } from "react-icons/fi";
-// import { useLoaderData, useNavigate } from "react-router-dom";
-// import { useSummary } from "../../../provider/SummaryProvider";
-// import { IoIosArrowForward } from "react-icons/io";
-// import dirhum from '../../../assets/icon/dirhum.png';
-
-
-// export default function BookingDetails() {
-//     const item = useLoaderData();
-//     const { mapLongitude, mapLatitude, serviceCharge, serviceFee, subTotal, vat, total } = useSummary();
-//     const [openInstructionsModal, setOpenInstructionsModal] = useState(false);
-//     const [openModal, setOpenModal] = useState(false);
-//     const [instructions, setInstructions] = useState("");
-//     const [modalAddress, setModalAddress] = useState(false);
-//     const [modalPrice, setModalPrice] = useState(false);
-//     const navigate = useNavigate();
-
-//     const handelReschudeleFun = () => {
-//         navigate('/date-time');
-//     }
-
-//     console.log(item);
-//     const handleAddInstructions = () => {
-//         console.log("Instructions saved:", instructions);
-//         setOpenInstructionsModal(false);
-//         setInstructions("");
-//     }
-
-//     const handelAddressDetails = item => {
-//         setModalAddress(true);
-//         console.log(item);
-//     }
-
-//     const handelTotalPay = item => {
-//         setModalPrice(true);
-//         console.log(item);
-//     }
-
-//     return (
-//         <div className="w-full min-h-screen p-4 flex justify-center items-start">
-//             <div className="w-full max-w-6xl bg-white rounded-xl shadow-xl p-4 mt-10">
-//                 {/* Booking confirmed */}
-//                 <div className="shadow-md rounded-lg p-4 space-y-1.5 md:space-y-0  md:flex items-center md:justify-between bg-gray-50">
-//                     <div>
-//                         <p className="font-semibold">Booking confirmed</p>
-//                         <p className="text-sm text-gray-500">
-//                             Your booking is confirmed and will be delivered as per the booked date and time
-//                         </p>
-//                         <div className="flex items-center gap-2 mt-2">
-//                             <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"><FaUser /></div>
-//                             <p className="text-sm font-medium">Supreme P.</p>
-//                         </div>
-//                     </div>
-//                     <div className="flex gap-3 text-gray-600 text-xl">
-//                         <button className="bg-[#01788E] p-2 rounded-full text-white cursor-pointer"><FiMessageCircle /></button>
-//                         <button className="bg-[#01788E] p-2 rounded-full text-white cursor-pointer"><FiPhone /></button>
-//                     </div>
-//                 </div>
-
-//                 {/* Rate Experience */}
-//                 <div className="mt-6 shadow-md p-4 rounded-lg">
-//                     <p className="font-medium mb-2">Rate your experience:</p>
-//                     <div className="rating rating-md">
-//                         <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="1 star" />
-//                         <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="2 star" defaultChecked />
-//                         <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="3 star" />
-//                         <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="4 star" />
-//                         <input type="radio" name="rating-7" className="mask mask-star-2 bg-orange-400" aria-label="5 star" />
-//                     </div>
-//                 </div>
-
-//                 {/* Job Details */}
-//                 <div className="mt-6 shadow rounded-lg p-4">
-//                     <h2 className="font-semibold mb-2">Job Details</h2>
-
-//                     <div className="flex justify-between">
-//                         <p>Booking Ref.</p>
-//                         <p className="text-gray-500 font-medium">20251119000426MPDXB</p>
-//                     </div>
-
-//                     <div className="flex justify-between py-2">
-//                         <p>Start time</p>
-//                         <p className="text-gray-500 font-medium">{item?.Data?.date}, {item?.Data?.time}</p>
-//                     </div>
-
-//                     <div className="flex justify-between py-2">
-//                         <p>Address</p>
-//                         {/* <p className="text-gray-500">{address?.buildingName}</p> */}
-//                         <p onClick={() => handelAddressDetails(item)} className="flex items-center gap-2 text-gray-500 cursor-pointer bg-gray-50 px-2 font-medium">{item?.Data?.address} <IoIosArrowForward className="text-xl" /></p>
-//                     </div>
-//                 </div>
-
-//                 {/* Service */}
-//                 <div className="mt-6 rounded-lg p-4 shadow-md">
-//                     <h2 className="font-semibold mb-2">Service</h2>
-
-//                     <div className="flex justify-between py-2">
-//                         <p>Studio - General x 1</p>
-//                         <p className="text-gray-500">{item?.Data?.serviceName}</p>
-//                     </div>
-
-//                     <div className="flex justify-between py-2">
-//                         <p>Service Fee</p>
-//                         <p className="font-semibold flex items-center gap-1"><img src={dirhum} alt="" className="w-4 h-4" />{item.Data?.serviceFee}</p>
-//                     </div>
-//                 </div>
-
-//                 {/* Payment Summary */}
-//                 <div className="mt-6 rounded-lg p-4 shadow-md">
-//                     <h2 className="font-semibold mb-2">Payment Summary</h2>
-
-//                     <div className="flex justify-between py-2">
-//                         <p>Payment method</p>
-//                         <p className="text-gray-500">{item?.Data?.paymentMethod}</p>
-//                     </div>
-
-//                     <div className="flex justify-between py-2">
-//                         <p>Total to Pay</p>
-//                         <p onClick={() => handelTotalPay(item)} className="font-semibold flex items-center gap-1 cursor-pointer bg-gray-50 px-2"><img src={dirhum} alt="" className="w-4 h-4" />{item.Data?.totalPay}<IoIosArrowForward className="text-xl" /></p>
-//                     </div>
-//                 </div>
-
-//                 {/* Manage Booking */}
-//                 <div className="flex justify-center mt-6">
-//                     <button onClick={() => setOpenModal(true)} className="bg-orange-600 text-white py-2 px-6 rounded-lg hover:bg-orange-700 transition">
-//                         Manage Booking
-//                     </button>
-//                 </div>
-
-
-//                 {/* Manage Booking Modal */}
-//                 {openModal &&
-//                     <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black bg-opacity-50"
-//                         onClick={() => setOpenModal(false)}
-//                     >
-//                         <div className="relative w-full max-w-md mx-4 bg-white rounded-lg shadow-2xl overflow-hidden"
-//                             onClick={(e) => e.stopPropagation()}>
-
-//                             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-//                                 <button className="text-gray-500 hover:text-gray-700 p-1" onClick={() => setOpenModal(false)}>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-//                                         <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-//                                     </svg>
-//                                 </button>
-
-//                                 <h2 className="text-lg font-semibold text-gray-800">
-//                                     Manage Booking
-//                                 </h2>
-
-//                                 <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700">
-//                                     Get Help
-//                                 </a>
-//                             </div>
-
-//                             <div className="divide-y divide-gray-100">
-//                                 <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-gray-800" onClick={handelReschudeleFun}>
-//                                     <div className="flex items-center space-x-4">
-//                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-//                                             <rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" />
-//                                         </svg>
-//                                         <span className="text-base font-normal">Reschedule</span>
-//                                     </div>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-//                                         <path d="m9 18 6-6-6-6" />
-//                                     </svg>
-//                                 </div>
-
-//                                 <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-gray-800" onClick={() => { setOpenModal(false); setOpenInstructionsModal(true); }}>
-//                                     <div className="flex items-center space-x-4">
-//                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-//                                             <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
-//                                         </svg>
-//                                         <span className="text-base font-normal">Add instructions</span>
-//                                     </div>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-//                                         <path d="m9 18 6-6-6-6" />
-//                                     </svg>
-//                                 </div>
-
-//                                 <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-gray-800">
-//                                     <div className="flex items-center space-x-4">
-//                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-//                                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
-//                                         </svg>
-//                                         <span className="text-base font-normal">Change address</span>
-//                                     </div>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-//                                         <path d="m9 18 6-6-6-6" />
-//                                     </svg>
-//                                 </div>
-
-//                                 <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-gray-800">
-//                                     <div className="flex items-center space-x-4">
-//                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-//                                             <rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" />
-//                                         </svg>
-//                                         <span className="text-base font-normal">Change payment method</span>
-//                                     </div>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-//                                         <path d="m9 18 6-6-6-6" />
-//                                     </svg>
-//                                 </div>
-
-//                                 <div className="flex justify-between items-center py-4 px-4 cursor-pointer hover:bg-gray-50 transition-colors text-red-600">
-//                                     <div className="flex items-center space-x-4">
-//                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-//                                             <circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" />
-//                                         </svg>
-//                                         <span className="text-base font-normal">Cancel</span>
-//                                     </div>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-gray-400">
-//                                         <path d="m9 18 6-6-6-6" />
-//                                     </svg>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 }
-
-//                 {/* Add Instructions Modal */}
-//                 {openInstructionsModal &&
-//                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-//                         onClick={() => setOpenInstructionsModal(false)}
-//                     >
-//                         <div className="relative w-full max-w-md mx-4 bg-white rounded-lg shadow-2xl overflow-hidden"
-//                             onClick={(e) => e.stopPropagation()}>
-
-//                             <div className="flex items-center justify-between p-4 border-b border-gray-200">
-//                                 <button className="text-gray-500 hover:text-gray-700 p-1" onClick={() => setOpenInstructionsModal(false)}>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-//                                         <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-//                                     </svg>
-//                                 </button>
-
-//                                 <h2 className="text-lg font-semibold text-gray-800">
-//                                     Add Instructions
-//                                 </h2>
-
-//                                 <div className="w-6"></div> {/* Empty div for spacing */}
-//                             </div>
-
-//                             <div className="p-6">
-//                                 <div className="mb-4">
-//                                     <label htmlFor="instructions" className="block text-sm font-medium text-gray-700 mb-2">
-//                                         Additional Instructions
-//                                     </label>
-//                                     <textarea
-//                                         id="instructions"
-//                                         rows="6"
-//                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-//                                         placeholder="Please provide any additional instructions for the service provider..."
-//                                         value={instructions}
-//                                         onChange={(e) => setInstructions(e.target.value)}
-//                                     />
-//                                     <p className="mt-1 text-sm text-gray-500">
-//                                         These instructions will be shared with your service provider.
-//                                     </p>
-//                                 </div>
-
-//                                 <div className="flex justify-end space-x-3">
-//                                     <button
-//                                         type="button"
-//                                         className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
-//                                         onClick={() => setOpenInstructionsModal(false)}
-//                                     >
-//                                         Cancel
-//                                     </button>
-//                                     <button
-//                                         type="button"
-//                                         className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition"
-//                                         onClick={handleAddInstructions}
-//                                         disabled={!instructions.trim()}
-//                                     >
-//                                         Save Instructions
-//                                     </button>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 }
-
-//                 {/* ADDRESS MODAL  */}
-//                 {modalAddress &&
-//                     <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black/50"
-//                         onClick={() => setModalAddress(false)}
-//                     >
-//                         <div className="relative w-full max-w-[600px] mx-4 bg-white rounded-lg shadow-xl overflow-hidden h-[90vh] flex flex-col"
-//                             onClick={(e) => e.stopPropagation()}>
-
-//                             {/* Header - Fixed height */}
-//                             <div className="shrink-0 flex items-center justify-center p-5 border-b border-gray-200 relative">
-//                                 <button className="absolute right-4 cursor-pointer text-gray-500 hover:text-gray-700 p-1.5"
-//                                     onClick={() => setModalAddress(false)}>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-//                                         <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-//                                     </svg>
-//                                 </button>
-
-//                                 <h2 className="text-lg font-semibold text-gray-800 tracking-tight">
-//                                     Address
-//                                 </h2>
-//                             </div>
-
-//                             {/* Main content - Scrollable area */}
-//                             <div className="flex-1 overflow-y-auto px-6 py-5"> {/* flex-1 and overflow-y-auto added */}
-//                                 {/* Address details section */}
-//                                 <div className="space-y-4 mb-6">
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">City</p>
-//                                         <p className="text-base font-medium text-gray-900">Dubai</p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Type</p>
-//                                         <p className="text-base font-medium text-gray-900">Apartment</p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Area</p>
-//                                         <p className="text-base font-medium text-gray-900">him</p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Building Name</p>
-//                                         <p className="text-base font-medium text-gray-900">vohn</p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Apartment No.</p>
-//                                         <p className="text-base font-medium text-gray-900">gfh</p>
-//                                     </div>
-//                                 </div>
-
-//                                 {/* Name and address section */}
-//                                 <div className="space-y-2">
-//                                     <div className="w-full h-64 rounded-lg overflow-hidden shrink-0"> {/* shrink-0 added for map */}
-//                                         <iframe
-//                                             width="100%"
-//                                             height="100%"
-//                                             loading="lazy"
-//                                             src={`https://www.google.com/maps?q=${mapLatitude},${mapLongitude}&z=16&output=embed`}
-//                                             style={{ pointerEvents: "none" }}
-//                                         ></iframe>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 }
-
-//                 {/* PRICE MODAL  */}
-//                 {modalPrice &&
-//                     <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 md:items-center md:pt-0 bg-black/50"
-//                         onClick={() => setModalPrice(false)}
-//                     >
-//                         <div className="relative w-full max-w-[600px] mx-4 bg-white rounded-lg shadow-xl overflow-hidden h-[90vh] flex flex-col"
-//                             onClick={(e) => e.stopPropagation()}>
-
-//                             {/* Header - Fixed height */}
-//                             <div className="shrink-0 flex items-center justify-center p-5 border-b border-gray-200 relative">
-//                                 <button className="absolute right-4 cursor-pointer text-gray-500 hover:text-gray-700 p-1.5"
-//                                     onClick={() => setModalPrice(false)}>
-//                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-//                                         <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-//                                     </svg>
-//                                 </button>
-
-//                                 <h2 className="text-lg font-semibold text-gray-800 tracking-tight">
-//                                     Total to pay
-//                                 </h2>
-//                             </div>
-
-//                             {/* Main content - Scrollable area */}
-//                             <div className="flex-1 overflow-y-auto px-6 py-5">
-//                                 {/* Address details section */}
-//                                 <div className="space-y-4 mb-6">
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Service Charges</p>
-//                                         <p className="text-xl font-medium text-gray-900 flex items-center gap-1">
-//                                             <img src={dirhum} alt="" className="h-5 w-5" />
-//                                             {serviceCharge}
-//                                         </p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Cash on Delivery Charges</p>
-//                                         <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-//                                             <img src={dirhum} alt="" className="h-5 w-5" />
-//                                             60
-//                                         </p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Service Fee</p>
-//                                         <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-//                                             <img src={dirhum} alt="" className="h-5 w-5" />
-//                                             {serviceFee}
-//                                         </p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Discount</p>
-//                                         <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-//                                             <img src={dirhum} alt="" className="h-5 w-5" />
-//                                             60
-//                                         </p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">Sub Total</p>
-//                                         <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-//                                             <img src={dirhum} alt="" className="h-5 w-5" />
-//                                             {subTotal}
-//                                         </p>
-//                                     </div>
-
-//                                     <div className="flex justify-between">
-//                                         <p className="text-base text-gray-700">VAT (5%)</p>
-//                                         <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-//                                             <img src={dirhum} alt="" className="h-5 w-5" />
-//                                             {vat}
-//                                         </p>
-//                                     </div>
-
-//                                     <div className="flex justify-between border-t pt-4 border-e-gray-200">
-//                                         <p className="text-base text-gray-700">Total to pay</p>
-//                                         <p className="text-xl flex items-center gap-1 font-medium text-gray-900">
-//                                             <img src={dirhum} alt="" className="h-5 w-5" />
-//                                             {total}
-//                                         </p>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 }
-//             </div>
-//         </div>
-//     );
-// };

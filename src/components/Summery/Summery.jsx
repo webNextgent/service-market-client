@@ -2,8 +2,11 @@ import { useState, useRef } from "react";
 import dirhum from "../../assets/icon/dirhum.png";
 import { useItem } from "../../provider/ItemProvider";
 import toast from "react-hot-toast";
+import { useSummary } from "../../provider/SummaryProvider";
 
 export default function Summary({ total, showInput, setShowInput, vat, subTotal, itemSummary, serviceCharge, address, date, time, serviceTitle, liveAddress, open, setOpen }) {
+
+    const { setUseDiscount } = useSummary();
     const [promo, setPromo] = useState("");
     const scrollContainerRef = useRef(null);
     const { removeItem } = useItem();
@@ -13,8 +16,7 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
         address ||
         "";
 
-
-
+    // for promo code 
     const handleApply = async () => {
         try {
             const res = await fetch(
@@ -22,27 +24,30 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
                 {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        code: promo
-                    })
+                    body: JSON.stringify({ code: promo }),
                 }
             );
 
-            const data = await res.json();
+            const result = await res.json();
 
             if (!res.ok) {
-                toast.error(data?.message);
-                console.log("Error:", data.message);
+                toast.error(result?.message || "Invalid promo code");
                 return;
             }
 
-            console.log("Success:", data);
+            const discountAmount = Number(result?.Data?.discount || 0);
+
+            // ✅ DIRECTLY context state এ পাঠাও
+            setUseDiscount(discountAmount);
+
             toast.success("Promo applied successfully");
+            console.log("Discount applied:", discountAmount);
 
         } catch (error) {
             console.error("Network error:", error);
+            toast.error("Something went wrong");
         }
     };
 
@@ -239,19 +244,6 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
                 </div>
             </div>
 
-            {/* MOBILE BOTTOM BAR */}
-            {/* <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-9999">
-                <div onClick={() => setOpen(true)} className="cursor-pointer select-none">
-                    <p className="text-[10px] text-gray-500">View Summary</p>
-                    <p className="text-base font-bold flex items-center gap-1 text-gray-800">
-                        <img src={dirhum} className="w-3.5 h-3.5" alt="currency" />
-                        {total.toFixed(2)}
-                        <span className="text-gray-400 text-sm ml-0.5">›</span>
-                    </p>
-                </div>
-                <NextBtn disabled={!isValid} />
-            </div> */}
-
             {/* BACKDROP FOR MOBILE */}
             {open && (
                 <div
@@ -335,7 +327,7 @@ export default function Summary({ total, showInput, setShowInput, vat, subTotal,
                                                     {item.title}
                                                 </span>
                                             </div>
-                                            <p className="text-xs text-gray-500 ml-7 truncate">{serviceTitle[index]} sdxfgkjhdfkgjh</p>
+                                            <p className="text-xs text-gray-500 ml-7 truncate">{serviceTitle[index]}</p>
                                         </div>
                                         <div className="flex items-center gap-1 font-semibold text-gray-800 shrink-0 ml-2">
                                             <img src={dirhum} className="w-3.5 h-3.5" alt="currency" />

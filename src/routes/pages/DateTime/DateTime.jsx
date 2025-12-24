@@ -13,7 +13,7 @@ const DateTime = () => {
     const [selectedTime, setSelectedTime] = useState(null);
     const scrollerRef = useRef(null);
     const [open, setOpen] = useState(false);
-    const { itemSummary, vat, serviceCharge, serviceTitle, showInput, setShowInput, setDate, setTime, liveAddress, total } = useSummary();
+    const { itemSummary, vat, serviceCharge, serviceTitle, showInput, setShowInput, setDate, setTime, liveAddress } = useSummary();
 
     const { data: dateTime, isLoading } = useQuery({
         queryKey: ['date-time-user'],
@@ -329,7 +329,7 @@ const DateTime = () => {
                             aria-hidden="true"
                         />
                         <span className="text-base font-bold text-gray-900 tabular-nums">
-                            {total.toFixed(2)}
+                           {serviceCharge + (serviceCharge * 0.05)}
                         </span>
                         <span
                             className="text-gray-400 text-sm transform transition-transform duration-200"

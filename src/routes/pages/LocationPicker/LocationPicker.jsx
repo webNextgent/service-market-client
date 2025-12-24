@@ -19,7 +19,7 @@ export default function LocationPicker() {
         libraries: ["places"],
     });
 
-    const { itemSummary, vat, serviceCharge, showInput, setShowInput, address, serviceTitle, setMapLongitude, setMapLatitude, setAddressLocation, liveAddress, total, saveAddress, setLiveAddress } = useSummary();
+    const { itemSummary, vat, serviceCharge, showInput, setShowInput, address, serviceTitle, setMapLongitude, setMapLatitude, setAddressLocation, liveAddress, saveAddress, setLiveAddress } = useSummary();
 
     const [selectedAddressId, setSelectedAddressId] = useState(
         liveAddress?.id || null
@@ -45,8 +45,6 @@ export default function LocationPicker() {
     const [open, setOpen] = useState(false);
     const [showMapForNew, setShowMapForNew] = useState(false);
 
-
-    console.log(saveAddress);
 
     const getAddressFromLatLng = (lat, lng) => {
         const geocoder = new window.google.maps.Geocoder();
@@ -200,7 +198,7 @@ export default function LocationPicker() {
                                 <div className="mt-6">
                                     <button
                                         onClick={() => {
-                                            setShowMapForNew(true);   // 🔥 force map
+                                            setShowMapForNew(true);
                                             setSelectedAddressId(null);
                                             setFromListSelection(false);
                                             setIsNextDisabled(true);
@@ -320,7 +318,7 @@ export default function LocationPicker() {
                             aria-hidden="true"
                         />
                         <span className="text-base font-bold text-gray-900 tabular-nums">
-                            {total.toFixed(2)}
+                          {serviceCharge + (serviceCharge * 0.05)}
                         </span>
                         <span
                             className="text-gray-400 text-sm transform transition-transform duration-200"

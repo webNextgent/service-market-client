@@ -72,7 +72,8 @@ const AddPropertyItem = () => {
                     ...data,
                     image: imageUrl,
                 };
-
+                console.log(finalData?.serviceCharge);
+                
                 const postData = await fetch("https://job-task-nu.vercel.app/api/v1/property-items/create", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
