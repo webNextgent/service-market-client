@@ -23,36 +23,34 @@ export default function Confirmation() {
     const navigate = useNavigate();
     const ides = itemSummary.map(p => p.id);
 
-    console.log(itemSummary);
+    // const REQUIRED_FIELDS = [
+    //     "propertyItemIds",
+    //     "serviceName",
+    //     "address",
+    //     "serviceFee",
+    //     "subTotal",
+    //     "vat",
+    //     "totalPay",
+    //     "date",
+    //     "time",
+    //     "paymentMethod",
+    // ];
 
-    const REQUIRED_FIELDS = [
-        "propertyItemIds",
-        "serviceName",
-        "address",
-        "serviceFee",
-        "subTotal",
-        "vat",
-        "totalPay",
-        "date",
-        "time",
-        "paymentMethod",
-    ];
+    // const isPayloadValid = (payload) => {
+    //     for (const key of REQUIRED_FIELDS) {
+    //         const value = payload[key];
 
-    const isPayloadValid = (payload) => {
-        for (const key of REQUIRED_FIELDS) {
-            const value = payload[key];
-
-            if (
-                value === null ||
-                value === undefined ||
-                value === "" ||
-                (Array.isArray(value) && value.length === 0)
-            ) {
-                return { isValid: false, missingField: key };
-            }
-        }
-        return { isValid: true };
-    };
+    //         if (
+    //             value === null ||
+    //             value === undefined ||
+    //             value === "" ||
+    //             (Array.isArray(value) && value.length === 0)
+    //         ) {
+    //             return { isValid: false, missingField: key };
+    //         }
+    //     }
+    //     return { isValid: true };
+    // };
 
 
     const getDisplayAddress = () => {
@@ -80,12 +78,11 @@ export default function Confirmation() {
 
     const handelBookingConfirmation = async () => {
         const displayAddress = getDisplayAddress();
-        
+
         if (!displayAddress || displayAddress.trim() === "") {
             toast.error("Please add an address first");
             return false;
         }
-
         if (!paymentMethod) {
             toast.error("Please select a payment method");
             return false;
@@ -95,7 +92,7 @@ export default function Confirmation() {
         const mappedPaymentMethod = paymentMethod === "Cash" ? "CashOnDelivery" : "Card";
 
         const payload = {
-            propertyItemIds: ides,
+            propertyItemid: ides,
             serviceName: services[0]?.title || "",
             address: displayAddress,
             offer: "30% off",
@@ -106,28 +103,27 @@ export default function Confirmation() {
             totalPay: mappedPaymentMethod === "CashOnDelivery" ? Number(total) + 5 : Number(total),
             date: date || "",
             time: time || "",
-            paymentMethod: mappedPaymentMethod, // Use exact enum value
+            paymentMethod: mappedPaymentMethod,
+            longitude: mapLongitude,
+            latitude: mapLatitude
         };
-        
-        // Debug log
-        console.log("Payload to send:", payload);
 
-        const validation = isPayloadValid(payload);
-        if (!validation.isValid) {
-            const fieldName = validation.missingField === "propertyItemIds" ? "Service Items" :
-                            validation.missingField === "serviceName" ? "Service Name" :
-                            validation.missingField === "address" ? "Address" :
-                            validation.missingField === "serviceFee" ? "Service Fee" :
-                            validation.missingField === "subTotal" ? "Sub Total" :
-                            validation.missingField === "vat" ? "VAT" :
-                            validation.missingField === "totalPay" ? "Total Pay" :
-                            validation.missingField === "date" ? "Date" :
-                            validation.missingField === "time" ? "Time" :
-                            validation.missingField === "paymentMethod" ? "Payment Method" : "Required field";
-            
-            toast.error(`Please complete: ${fieldName}`);
-            return false;
-        }
+        // const validation = isPayloadValid(payload);
+        // if (!validation.isValid) {
+        //     const fieldName = validation.missingField === "propertyItemid" ? "Service Items" :
+        //         validation.missingField === "serviceName" ? "Service Name" :
+        //             validation.missingField === "address" ? "Address" :
+        //                 validation.missingField === "serviceFee" ? "Service Fee" :
+        //                     validation.missingField === "subTotal" ? "Sub Total" :
+        //                         validation.missingField === "vat" ? "VAT" :
+        //                             validation.missingField === "totalPay" ? "Total Pay" :
+        //                                 validation.missingField === "date" ? "Date" :
+        //                                     validation.missingField === "time" ? "Time" :
+        //                                         validation.missingField === "paymentMethod" ? "Payment Method" : "Required field";
+
+        //     toast.error(`Please complete: ${fieldName}`);
+        //     return false;
+        // }
 
         try {
             const response = await fetch(
@@ -356,7 +352,7 @@ export default function Confirmation() {
                             We will reserve and release ₱1 to confirm your Card.
                         </div>
 
-                        <button 
+                        <button
                             onClick={() => {
                                 setPaymentMethod("Card");
                                 setOpenModal(false);

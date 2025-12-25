@@ -84,9 +84,6 @@ export const SummaryProvider = ({ children }) => {
         item?.propertyType?.serviceType?.title || null
     );
 
-
-    console.log(itemSummary);
-
     const serviceCharge = itemSummary.reduce((acc, item) => acc + Number(item?.price || 0), 0);
     const serviceFeeTotal = itemSummary.reduce((acc, item) => acc + Number(item?.serviceCharge || 0), 0);
     const serviceFee = Number((serviceCharge > 0 ? serviceFeeTotal : 0).toFixed(2));
