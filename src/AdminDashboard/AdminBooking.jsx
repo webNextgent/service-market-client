@@ -56,7 +56,6 @@ const AdminBooking = () => {
         if (!window.confirm("Are you sure you want to delete this booking?")) {
             return;
         }
-
         try {
             const res = await fetch(
                 `${import.meta.env.VITE_BACKEND_API_URL}/booking/delete/${bookingId}`,
@@ -115,7 +114,6 @@ const AdminBooking = () => {
                                     onClick={() => setBookingDetails(book)}
                                 >
                                     <th>{idx + 1}</th>
-
                                     {/* Service */}
                                     <td className="">
                                         <p className="font-medium">{book.serviceName}</p>
@@ -184,10 +182,6 @@ const AdminBooking = () => {
             </div>
 
             {/* MODAL FOR EDITING */}
-
-
-
-
             {selectedBooking && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white rounded-lg w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col">
@@ -293,338 +287,143 @@ const AdminBooking = () => {
                 </div>
             )}
 
-
-
-
-
-
-
-
-
-
-
             {/* DETAILS MODAL */}
-     
+            {bookingDetails && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col">
 
-
-
-
-
-
-
-
-
-
-     {bookingDetails && (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white rounded-lg w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col">
-            
-            {/* Modal Header */}
-            <div className="flex justify-between items-center p-6 border-b shrink-0">
-                <h3 className="text-xl font-bold">Booking Details</h3>
-                <button
-                    onClick={() => setBookingDetails(null)}
-                    className="text-2xl hover:text-gray-600"
-                >
-                    &times;
-                </button>
-            </div>
-
-            {/* Modal Body (Scrollable) */}
-            <div className="p-6 space-y-4 overflow-y-auto flex-1">
-                
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <p className="text-sm text-gray-500">Booking ID</p>
-                        <p className="font-medium">{bookingDetails.id || "N/A"}</p>
-                    </div>
-
-                    {/* Status */}
-                    <div>
-                        <p className="text-sm text-gray-500">Status</p>
-                        <span
-                            className={`badge p-2 ${
-                                bookingDetails.status === 'Completed'
-                                    ? 'badge-success'
-                                    : bookingDetails.status === 'Ongoing'
-                                    ? 'badge-warning'
-                                    : bookingDetails.status === 'Cancelled'
-                                    ? 'badge-error'
-                                    : 'badge-info'
-                            } text-white`}
-                        >
-                            {bookingDetails.status}
-                        </span>
-                    </div>
-                </div>
-
-                {/* Service Details */}
-                <div className="border-t pt-4">
-                    <h4 className="font-bold text-lg mb-2">Service Details</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <p className="text-sm text-gray-500">Service Name</p>
-                            <p className="font-medium">{bookingDetails.serviceName}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-500">Amount</p>
-                            <p className="font-medium">${bookingDetails.totalPay}</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Date & Time */}
-                <div className="border-t pt-4">
-                    <h4 className="font-bold text-lg mb-2">Schedule</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <p className="text-sm text-gray-500">Date</p>
-                            <p className="font-medium">{bookingDetails.date}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-500">Time</p>
-                            <p className="font-medium">{bookingDetails.time}</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Address */}
-                <div className="border-t pt-4">
-                    <h4 className="font-bold text-lg mb-2">Address</h4>
-                    <p className="bg-gray-50 p-3 rounded">{bookingDetails.address}</p>
-                </div>
-
-                {/* Additional Information */}
-                {bookingDetails.additionalInfo && (
-                    <div className="border-t pt-4">
-                        <h4 className="font-bold text-lg mb-2">Additional Information</h4>
-                        <p className="bg-gray-50 p-3 rounded">
-                            {bookingDetails.additionalInfo}
-                        </p>
-                    </div>
-                )}
-
-                {/* Payment Information */}
-                <div className="border-t pt-4">
-                    <h4 className="font-bold text-lg mb-2">Payment</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <p className="text-sm text-gray-500">Payment Method</p>
-                            <p className="font-medium">
-                                {bookingDetails.paymentMethod || "Credit Card"}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-500">Payment Status</p>
-                            <span
-                                className={`badge p-2 ${
-                                    bookingDetails.paymentStatus === 'Paid'
-                                        ? 'badge-success'
-                                        : 'badge-error'
-                                } text-white`}
+                        {/* Modal Header */}
+                        <div className="flex justify-between items-center p-6 border-b shrink-0">
+                            <h3 className="text-xl font-bold">Booking Details</h3>
+                            <button
+                                onClick={() => setBookingDetails(null)}
+                                className="text-2xl hover:text-gray-600"
                             >
-                                {bookingDetails.paymentStatus || "Pending"}
-                            </span>
+                                &times;
+                            </button>
+                        </div>
+
+                        {/* Modal Body (Scrollable) */}
+                        <div className="p-6 space-y-4 overflow-y-auto flex-1">
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-sm text-gray-500">Booking ID</p>
+                                    <p className="font-medium">{bookingDetails.id || "N/A"}</p>
+                                </div>
+
+                                {/* Status */}
+                                <div>
+                                    <p className="text-sm text-gray-500">Status</p>
+                                    <span
+                                        className={`badge p-2 ${bookingDetails.status === 'Completed'
+                                            ? 'badge-success'
+                                            : bookingDetails.status === 'Ongoing'
+                                                ? 'badge-warning'
+                                                : bookingDetails.status === 'Cancelled'
+                                                    ? 'badge-error'
+                                                    : 'badge-info'
+                                            } text-white`}
+                                    >
+                                        {bookingDetails.status}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Service Details */}
+                            <div className="border-t pt-4">
+                                <h4 className="font-bold text-lg mb-2">Service Details</h4>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm text-gray-500">Service Name</p>
+                                        <p className="font-medium">{bookingDetails.serviceName}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500">Amount</p>
+                                        <p className="font-medium">${bookingDetails.totalPay}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Date & Time */}
+                            <div className="border-t pt-4">
+                                <h4 className="font-bold text-lg mb-2">Schedule</h4>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm text-gray-500">Date</p>
+                                        <p className="font-medium">{bookingDetails.date}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500">Time</p>
+                                        <p className="font-medium">{bookingDetails.time}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Address */}
+                            <div className="border-t pt-4">
+                                <h4 className="font-bold text-lg mb-2">Address</h4>
+                                <p className="bg-gray-50 p-3 rounded">{bookingDetails.address}</p>
+                            </div>
+
+                            {/* Additional Information */}
+                            {bookingDetails.additionalInfo && (
+                                <div className="border-t pt-4">
+                                    <h4 className="font-bold text-lg mb-2">Additional Information</h4>
+                                    <p className="bg-gray-50 p-3 rounded">
+                                        {bookingDetails.additionalInfo}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Payment Information */}
+                            <div className="border-t pt-4">
+                                <h4 className="font-bold text-lg mb-2">Payment</h4>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm text-gray-500">Payment Method</p>
+                                        <p className="font-medium">
+                                            {bookingDetails.paymentMethod || "Credit Card"}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500">Payment Status</p>
+                                        <span
+                                            className={`badge p-2 ${bookingDetails.paymentStatus === 'Paid'
+                                                ? 'badge-success'
+                                                : 'badge-error'
+                                                } text-white`}
+                                        >
+                                            {bookingDetails.paymentStatus || "Pending"}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="flex justify-end gap-3 p-6 border-t shrink-0">
+                            <button
+                                className="px-4 py-2 border rounded hover:bg-gray-100"
+                                onClick={() => setBookingDetails(null)}
+                            >
+                                Close
+                            </button>
+                            <button
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                onClick={() => {
+                                    setSelectedBooking(bookingDetails);
+                                    setBookingDetails(null);
+                                }}
+                            >
+                                Edit Booking
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="flex justify-end gap-3 p-6 border-t shrink-0">
-                <button
-                    className="px-4 py-2 border rounded hover:bg-gray-100"
-                    onClick={() => setBookingDetails(null)}
-                >
-                    Close
-                </button>
-                <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    onClick={() => {
-                        setSelectedBooking(bookingDetails);
-                        setBookingDetails(null);
-                    }}
-                >
-                    Edit Booking
-                </button>
-            </div>
-        </div>
-    </div>
-)}
-
+            )}
         </div>
     );
 };
 
 export default AdminBooking;
-
-
-
-
-
-
-// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-// import { useState } from "react";
-// import { FaCalendarAlt } from "react-icons/fa";
-// import { RiEditBoxLine, RiDeleteBin5Line } from "react-icons/ri";
-
-// const AdminBooking = () => {
-//     const queryClient = useQueryClient();
-//     const [selectedBooking, setSelectedBooking] = useState(null);
-
-//     const { data: booking = [], isLoading } = useQuery({
-//         queryKey: ["bookingAdmin"],
-//         queryFn: async () => {
-//             const res = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/booking`);
-//             const bookingRes = await res.json();
-//             return bookingRes.Data;
-//         },
-//     });
-
-//     // Update Booking Status
-//     const mutation = useMutation({
-//         mutationFn: async (updatedBooking) => {
-//             const res = await fetch(
-//                 `${import.meta.env.VITE_BACKEND_API_URL}/booking/${updatedBooking.id}`,
-//                 {
-//                     method: "PUT",
-//                     headers: { "Content-Type": "application/json" },
-//                     body: JSON.stringify({ status: updatedBooking.status }),
-//                 }
-//             );
-//             return res.json();
-//         },
-//         onSuccess: () => {
-//             queryClient.invalidateQueries(["bookingAdmin"]);
-//         },
-//     });
-
-//     const handleUpdateStatus = () => {
-//         mutation.mutate(selectedBooking);
-//         setSelectedBooking(null);
-//     };
-
-//     if (isLoading) return <p className="text-center md:mt-10">Loading...</p>;
-
-//     return (
-//         <div className="border border-[#E5E7EB] px-2 md:px-6 py-4 rounded-lg bg-white w-full max-w-6xl mx-auto">
-//             <h2 className="flex items-center gap-2.5 text-xl font-semibold border-b border-[#E5E7EB] pb-3 text-[#5D4F52]">
-//                 <FaCalendarAlt className="text-[#01788E]" />Bookings: {booking.length}
-//             </h2>
-
-//             <div className="mt-10">
-//                 <div className="overflow-x-auto">
-//                     <table className="table">
-//                         <thead>
-//                             <tr>
-//                                 <th>No</th>
-//                                 <th>Service Name</th>
-//                                 <th>Date & Time</th>
-//                                 <th>Address</th>
-//                                 <th>Status</th>
-//                                 <th>Action</th>
-//                             </tr>
-//                         </thead>
-//                         <tbody>
-//                             {booking.map((book, idx) => (
-//                                 <tr key={book.id}>
-//                                     <th>{idx + 1}</th>
-
-//                                     {/* Service */}
-//                                     <td>
-//                                         <p className="font-medium">{book.serviceName}</p>
-//                                         <p className="text-xs font-semibold">Amount: {book.totalPay}</p>
-//                                     </td>
-
-//                                     {/* Date & Time */}
-//                                     <td>
-//                                         <p>{book.date}</p>
-//                                         <p>{book.time}</p>
-//                                     </td>
-
-//                                     {/* Address */}
-//                                     <td>{book.address}</td>
-
-//                                     {/* Status */}
-//                                     <td>
-//                                         <div className="badge badge-info p-3 text-white">
-//                                             {book.status}
-//                                         </div>
-//                                     </td>
-
-//                                     {/* Actions */}
-//                                     <td className="flex items-center gap-3">
-//                                         <button
-//                                             title="Edit"
-//                                             className="btn btn-ghost btn-xs"
-//                                             onClick={() => setSelectedBooking(book)}
-//                                         >
-//                                             <RiEditBoxLine className="text-xl text-green-500" />
-//                                         </button>
-
-//                                         <button className="btn btn-ghost btn-xs" title="Delete">
-//                                             <RiDeleteBin5Line className="text-xl text-red-500" />
-//                                         </button>
-//                                     </td>
-//                                 </tr>
-//                             ))}
-//                         </tbody>
-//                     </table>
-//                 </div>
-//             </div>
-
-//             {/* MODAL FOR EDITING STATUS  */}
-//             {selectedBooking && (
-//                 <dialog open className="modal">
-//                     <div className="modal-box">
-//                         <h3 className="font-bold text-lg">Edit Booking Status</h3>
-
-//                         <div className="mt-4">
-//                             <p className="font-medium">
-//                                 {selectedBooking.serviceName}
-//                             </p>
-//                             <p>
-//                                 {selectedBooking.date} - {selectedBooking.time}
-//                             </p>
-//                             <p className="text-sm">Address: {selectedBooking.address}</p>
-//                         </div>
-
-//                         <select
-//                             defaultValue={selectedBooking.status}
-//                             className="select select-bordered w-full mt-4"
-//                             onChange={(e) =>
-//                                 setSelectedBooking({
-//                                     ...selectedBooking,
-//                                     status: e.target.value,
-//                                 })
-//                             }
-//                         >
-//                             <option>Upcoming</option>
-//                             <option>Ongoing</option>
-//                             <option>Completed</option>
-//                             <option>Cancelled</option>
-//                         </select>
-
-//                         <div className="modal-action">
-//                             <button
-//                                 className="btn"
-//                                 onClick={() => setSelectedBooking(null)}
-//                             >
-//                                 Cancel
-//                             </button>
-
-//                             <button
-//                                 className="btn btn-primary"
-//                                 onClick={handleUpdateStatus}
-//                             >
-//                                 Save
-//                             </button>
-//                         </div>
-//                     </div>
-//                 </dialog>
-//             )}
-//         </div>
-//     );
-// };
-
-// export default AdminBooking; 

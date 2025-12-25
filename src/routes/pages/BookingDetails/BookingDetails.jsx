@@ -881,8 +881,6 @@ export default function BookingDetails() {
                 }
 
                 {/* ADDRESS MODAL - View Current Address */}
-
-                {/* ADDRESS MODAL - View Current Address */}
                 {modalAddress &&
                     <div className="fixed inset-0 z-50 flex items-start justify-center pt-4 sm:pt-10 md:items-center md:pt-0 bg-black/50"
                         onClick={() => setModalAddress(false)}
@@ -970,7 +968,6 @@ export default function BookingDetails() {
 
                                 {/* Map Section */}
                                 <div className="space-y-4 mb-6">
-                                    {/* Check if coordinates are available */}
                                     {(() => {
                                         // Get coordinates from useSummary or fallback to item data
                                         const getCoordinates = () => {

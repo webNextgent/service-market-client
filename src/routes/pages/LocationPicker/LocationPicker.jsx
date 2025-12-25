@@ -299,46 +299,45 @@ export default function LocationPicker() {
 
 
             {/* for mobile & tablet view  */}
-            <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 px-3 py-2 flex items-center justify-between z-50">
-                {/* Summary Trigger Button */}
-                <button
-                    onClick={() => setOpen(true)}
-                    className="cursor-pointer select-none active:scale-[0.98] transition-transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-lg px-1 -ml-1"
-                    aria-label="View order summary"
-                    aria-expanded={open}
-                >
-                    <p className="text-[10px] text-gray-500 font-medium tracking-wide uppercase">
-                        View Summary
-                    </p>
-                    <div className="flex items-center gap-1.5">
-                        <img
-                            src={dirhum}
-                            className="w-3.5 h-3.5 object-contain"
-                            alt="Currency icon"
-                            aria-hidden="true"
-                        />
-                        <span className="text-base font-bold text-gray-900 tabular-nums">
-                          {serviceCharge + (serviceCharge * 0.05)}
-                        </span>
-                        <span
-                            className="text-gray-400 text-sm transform transition-transform duration-200"
-                            aria-hidden="true"
-                        >
-                            ›
-                        </span>
-                    </div>
-                </button>
+            <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.08)] border-t border-gray-200 z-50">
+                <div className="flex justify-center px-3 py-2">
+                    <div className="flex items-center gap-4">
 
-                {/* Checkout Button */}
-                <NextBtn
-                    disabled={isNextDisabled}
-                    onClick={handleNextClick}
-                />
+                        {/* View Summary */}
+                        <button
+                            onClick={() => setOpen(true)}
+                            className="cursor-pointer select-none
+                   active:scale-[0.98] transition-transform
+                   focus:outline-none focus:ring-2
+                   focus:ring-blue-500 focus:ring-offset-2
+                   rounded-lg px-1"
+                        >
+                            <p className="text-[10px] text-gray-500 font-medium uppercase">
+                                View Summary
+                            </p>
+                            <div className="flex items-center gap-1.5 justify-center">
+                                <img src={dirhum} className="w-3.5 h-3.5" alt="" />
+                                <span className="text-base font-bold text-gray-900">
+                                    {serviceCharge + serviceCharge * 0.05}
+                                </span>
+                                <span className="text-gray-400 text-sm">›</span>
+                            </div>
+                        </button>
+
+                        {/* Next Button (Fixed Width) */}
+                        <div className="w-[140px]">
+                            <NextBtn
+                                disabled={isNextDisabled}
+                                onClick={handleNextClick}
+                            />
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
 
-
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
                 <NextBtn
                     disabled={isNextDisabled}
                     onClick={handleNextClick}

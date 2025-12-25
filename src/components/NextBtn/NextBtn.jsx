@@ -27,7 +27,7 @@ const NextBtn = ({ name = "Next", disabled, onClick }) => {
     };
 
     return (
-        <div className="w-full p-2 flex justify-center md:fixed md:bottom-0 md:left-0 bg-white md:z-40">
+        <div className="w-full p-2 lg:flex lg:justify-center lg:fixed lg:bottom-0 lg:left-0 bg-white lg:z-40">
             <button
                 onClick={handleClick}
                 disabled={isDisabled}
